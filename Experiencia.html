@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Experiência · O Alquimista</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--bg-2:#131312;--bg-3:#1a1814;
+  --ink:#e8e6e0;--ink-soft:#a8a59c;--ink-muted:#807c76;
+  --rule:rgba(232,230,224,0.10);--rule-strong:rgba(232,230,224,0.22);
+  --gold:#d4a85a;--gold-deep:#a87f30;--green:#6b8a4a;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --sans:'Inter',system-ui,sans-serif;
+  --serif:'Cormorant Garamond',Garamond,serif;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;height:auto}
+
+.bar{position:fixed;inset:0 0 auto 0;z-index:50;display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:28px;padding:0 20px;height:48px;background:rgba(10,10,10,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:11px}
+.bar .logo{display:flex;align-items:center;gap:8px;font-weight:600;letter-spacing:0.06em}
+.bar .logo-dot{color:var(--gold)}
+.bar nav{display:flex;gap:20px;color:var(--ink-soft)}
+.bar nav a:hover{color:var(--gold)}
+.bar nav a.active{color:var(--gold)}
+.bar .status{display:flex;align-items:center;gap:8px;color:var(--ink-soft)}
+.bar .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.6s infinite}
+@keyframes blink{0%,100%{opacity:0.4}50%{opacity:1}}
+.bar .order-btn{background:var(--gold);color:var(--bg);padding:6px 14px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;font-family:var(--mono);font-size:11px}
+
+.bar .burger{display:none;background:transparent;border:1px solid var(--rule-strong);width:34px;height:30px;cursor:pointer;flex-direction:column;justify-content:center;align-items:center;gap:5px;padding:0}
+.bar .burger span{width:14px;height:1px;background:var(--ink);display:block;transition:transform .25s ease,opacity .25s ease}
+.bar.open .burger span:nth-child(1){transform:translateY(3px) rotate(45deg)}
+.bar.open .burger span:nth-child(2){opacity:0}
+.bar.open .burger span:nth-child(3){transform:translateY(-3px) rotate(-45deg)}
+.mob-menu{display:none;position:fixed;left:0;right:0;top:48px;z-index:49;background:rgba(10,10,10,0.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--rule);padding:24px 24px 32px;flex-direction:column;gap:2px;font-family:var(--mono);font-size:13px}
+.mob-menu a{display:block;padding:14px 4px;color:var(--ink);border-bottom:1px solid var(--rule);letter-spacing:0.08em}
+.mob-menu a.active{color:var(--gold)}
+.mob-menu .mob-cta{margin-top:20px;background:var(--gold);color:var(--bg);text-align:center;padding:14px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;border:none}
+.bar.open + .mob-menu{display:flex;animation:slideDown .25s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+
+main{padding-top:48px}
+
+/* ── HERO IMERSIVO ──
+   Ocupa quase todo o ecrã (88vh). Múltiplos gradientes
+   sobrepostos sobre a imagem de fundo criam profundidade.
+   O grid com place-items:end start coloca o conteúdo no
+   canto inferior esquerdo, estilo editorial de revista. */
+.x-hero{position:relative;min-height:88vh;display:grid;place-items:end start;padding:64px;overflow:hidden;border-bottom:1px solid var(--rule);background:#0a0a0a}
+.x-hero .bg{position:absolute;inset:0;background:
+  radial-gradient(ellipse at 20% 30%,rgba(212,168,90,0.18) 0%,transparent 50%),
+  radial-gradient(ellipse at 80% 70%,rgba(168,127,48,0.15) 0%,transparent 55%),
+  linear-gradient(180deg,rgba(10,10,10,0.82) 0%,rgba(26,24,20,0.7) 40%,rgba(10,10,10,0.88) 100%),
+  url('img/lucid-origin_Professional_editorial_photograph_of_a_specialty_coffee_roaster_at_work._Person_-0.jpg');
+  background-size:cover;background-position:center 30%}
+.x-hero .bg::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(212,168,90,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(212,168,90,0.06) 1px,transparent 1px);background-size:48px 48px;opacity:0.5}
+.x-hero .x-mark{position:absolute;top:48px;left:64px;font-family:var(--mono);font-size:10px;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px}
+.x-hero .x-mark::before{content:'';width:24px;height:1px;background:var(--gold)}
+.x-hero .x-coord{position:absolute;top:48px;right:64px;font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-muted);text-align:right;line-height:1.7}
+.x-hero .x-coord .gold{color:var(--gold)}
+.x-hero .content{position:relative;z-index:1;max-width:880px}
+.x-hero h1{font-family:var(--sans);font-weight:300;font-size:clamp(56px,8vw,140px);line-height:1.02;letter-spacing:-0.035em;margin:0 0 56px;padding-bottom:8px}
+.x-hero h1 em{font-family:var(--serif);font-style:italic;color:var(--gold);font-weight:400}
+.x-hero p{font-family:var(--serif);font-style:italic;font-size:24px;line-height:1.45;color:var(--ink-soft);max-width:620px;margin:0}
+.x-hero .x-foot{position:absolute;bottom:48px;right:64px;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-muted)}
+.x-hero .x-foot .gold{color:var(--gold)}
+
+
+/* ── MÉTRICAS DO HERO ──
+   Linha de dados (duração, passos, etc.) separados por
+   border-right. Valores grandes em font-weight:300 para
+   estética elegante, labels em mono maiúsculo. */
+.hero-data{display:flex;gap:0;margin-top:48px;border-top:1px solid var(--rule);padding-top:24px}
+.hero-datum{flex:1;padding-right:24px}
+.hero-datum:not(:last-child){border-right:1px solid var(--rule)}
+.hero-datum:not(:first-child){padding-left:24px}
+.hd-val{display:block;font-family:var(--sans);font-weight:300;font-size:28px;letter-spacing:-0.02em;color:var(--ink);line-height:1.2}
+.hd-key{display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-muted);margin-top:6px}
+
+/* ── SECÇÃO DO ESPAÇO — galeria fotográfica ──
+   Grid assimétrico com imagem grande (2fr) e duas pequenas
+   (1fr). Os placeholders usam gradientes radiais e lineares
+   para simular fotografias quando não há imagens reais. */
+.space{padding:120px 0;border-bottom:1px solid var(--rule)}
+.space-head{padding:0 64px 56px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end}
+.space-head .tag{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.space-head h2{font-family:var(--sans);font-weight:300;font-size:clamp(36px,4.4vw,60px);line-height:1.05;letter-spacing:-0.02em;margin:0}
+.space-head h2 em{font-family:var(--serif);font-style:italic;color:var(--gold);font-weight:400}
+.space-head .lede{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.5;color:var(--ink-soft);max-width:480px;margin:0}
+
+.gallery{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto auto;gap:1px;background:var(--rule)}
+.frame{position:relative;background:var(--bg-2);overflow:hidden;min-height:340px}
+.frame.big{grid-row:1/3}
+.frame .ph{position:absolute;inset:0;display:grid;place-items:center}
+.frame .lbl{position:absolute;bottom:24px;left:18px;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold)}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.frame .caption{position:absolute;bottom:46px;left:14px;right:18px;max-width:500px;font-family:var(--serif);font-style:italic;font-size:15px;line-height:1.5;color:var(--ink);background:rgba(10,10,10,0.88);padding:6px 4px;border-radius:2px}
+.frame .num{position:absolute;top:18px;right:18px;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;color:var(--ink-muted)}
+
+/* ── PLACEHOLDERS FOTOGRÁFICOS ──
+   Composições de gradiente que simulam fotografias.
+   ph-1: grão de café (radial-gradient + ellipse)
+   ph-2: bancada do laboratório (gradiente linear + linhas)
+   ph-3: chávena vista de cima (radial-gradient circular) */
+.ph-1{background:radial-gradient(ellipse at 30% 40%,#3a2818 0%,#1a0e06 50%,#0a0502 100%);}
+.ph-1::before{content:'';position:absolute;inset:0;background:
+  radial-gradient(circle at 50% 50%,rgba(212,168,90,0.3) 0%,transparent 25%),
+  radial-gradient(circle at 30% 65%,rgba(212,168,90,0.15) 0%,transparent 30%);}
+.ph-1::after{content:'';position:absolute;left:50%;top:50%;width:160px;height:200px;border-radius:50%;background:radial-gradient(ellipse at 35% 30%,#a87a4a,#3d2515 60%,#1a0d05);transform:translate(-50%,-50%);box-shadow:0 20px 80px rgba(212,168,90,0.25)}
+
+.ph-2{background:linear-gradient(135deg,#2a1a0f 0%,#0a0a0a 100%)}
+.ph-2::before{content:'';position:absolute;inset:0;background:
+  repeating-linear-gradient(90deg,transparent 0,transparent 18px,rgba(212,168,90,0.1) 18px,rgba(212,168,90,0.1) 19px),
+  radial-gradient(ellipse at 70% 30%,rgba(212,168,90,0.2),transparent 50%)}
+.ph-2::after{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60%;height:2px;background:linear-gradient(90deg,transparent,#d4a85a,transparent)}
+
+.ph-3{background:radial-gradient(ellipse at 60% 30%,#5a3520 0%,#1a0e06 60%,#0a0502 100%)}
+.ph-3::before{content:'';position:absolute;left:30%;top:30%;width:40%;height:40%;background:radial-gradient(circle,rgba(212,168,90,0.35),transparent 70%);border-radius:50%}
+.ph-3::after{content:'';position:absolute;left:50%;top:50%;width:80px;height:80px;background:radial-gradient(circle,#1a0d05 30%,#0a0502);border-radius:50%;transform:translate(-50%,-50%);box-shadow:inset 0 -8px 16px rgba(212,168,90,0.2),0 0 40px rgba(212,168,90,0.15)}
+
+/* ── RITUAL DA VISITA — passos da experiência ──
+   Duas colunas: título sticky à esquerda (acompanha scroll)
+   e lista de passos à direita. Cada passo é um grid de 3
+   colunas (número, texto, duração). */
+.ritual{padding:120px 64px;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:1fr 1fr;gap:80px}
+.ritual-l{position:sticky;top:80px;align-self:start}
+.ritual-l .tag{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.ritual-l h2{font-family:var(--sans);font-weight:300;font-size:clamp(36px,4.4vw,60px);line-height:1.05;letter-spacing:-0.02em;margin:0 0 24px}
+.ritual-l h2 em{font-family:var(--serif);font-style:italic;color:var(--gold);font-weight:400}
+.ritual-l p{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.5;color:var(--ink-soft);margin:0}
+.ritual-r{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.ritual-step{background:var(--bg);padding:32px;display:grid;grid-template-columns:60px 1fr auto;gap:24px;align-items:center}
+.ritual-step .ix{font-family:var(--serif);font-style:italic;font-size:48px;color:var(--gold);line-height:1;font-weight:400}
+.ritual-step .body .h{font-family:var(--sans);font-size:18px;font-weight:400;margin-bottom:6px}
+.ritual-step .body .d{font-family:var(--mono);font-size:11px;color:var(--ink-soft);line-height:1.7;letter-spacing:0.04em}
+.ritual-step .t{font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-muted);text-align:right}
+
+/* ── INFORMAÇÕES PRÁTICAS — horários e mapa ──
+   Grid de 2 colunas: informações à esquerda, mapa
+   estilizado à direita. As linhas de informação usam
+   grid de 2 colunas (label + valor). */
+.info{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--rule)}
+.info-l{padding:96px 64px;border-right:1px solid var(--rule)}
+.info-r{position:relative;background:#0a0a0a;min-height:560px;overflow:hidden}
+.info-l .tag{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.info-l h2{font-family:var(--sans);font-weight:300;font-size:clamp(32px,3.6vw,48px);line-height:1.05;letter-spacing:-0.02em;margin:0 0 40px}
+.info-l h2 em{font-family:var(--serif);font-style:italic;color:var(--gold);font-weight:400}
+.info-row{display:grid;grid-template-columns:120px 1fr;gap:24px;padding:18px 0;border-bottom:1px solid var(--rule)}
+.info-row:first-of-type{border-top:1px solid var(--rule)}
+.info-row .k{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-muted);padding-top:3px}
+.info-row .v{font-family:var(--sans);font-size:15px;line-height:1.65;color:var(--ink)}
+.info-row .v .gold{color:var(--gold)}
+.info-row .v small{display:block;font-family:var(--mono);font-size:10px;color:var(--ink-muted);letter-spacing:0.06em;margin-top:4px}
+
+/* ── MAPA ESTILIZADO ──
+   Em vez de embed do Google Maps, criamos um mapa minimalista
+   com gradientes e grid CSS. O pin pulsa com @keyframes pulse
+   e tem 3 anéis de sombra concêntricos (box-shadow). */
+.map{position:absolute;inset:0;background:
+  radial-gradient(ellipse at 50% 50%,#1a1814 0%,#0a0a0a 70%);
+  background-image:
+    linear-gradient(rgba(212,168,90,0.08) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(212,168,90,0.08) 1px,transparent 1px);
+  background-size:32px 32px}
+.map::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,#1a1814 0%,#0a0a0a 75%)}
+.map svg{position:absolute;inset:0;width:100%;height:100%}
+.map .pin{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 6px rgba(212,168,90,0.2),0 0 0 18px rgba(212,168,90,0.08),0 0 0 36px rgba(212,168,90,0.04);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 6px rgba(212,168,90,0.2),0 0 0 18px rgba(212,168,90,0.08),0 0 0 36px rgba(212,168,90,0.04)}50%{box-shadow:0 0 0 8px rgba(212,168,90,0.3),0 0 0 24px rgba(212,168,90,0.12),0 0 0 48px rgba(212,168,90,0.05)}}
+.map .pin-label{position:absolute;left:calc(50% + 24px);top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);background:rgba(10,10,10,0.7);padding:8px 12px;backdrop-filter:blur(6px);white-space:nowrap}
+.map .scale{position:absolute;bottom:24px;left:24px;font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-muted)}
+.map .scale::before{content:'';display:inline-block;width:40px;height:1px;background:var(--gold);margin-right:10px;vertical-align:middle}
+.map .compass{position:absolute;top:24px;right:24px;width:40px;height:40px;border:1px solid var(--rule-strong);border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:600}
+.map .coord{position:absolute;top:24px;left:24px;font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-muted);line-height:1.7}
+.map .coord .gold{color:var(--gold)}
+
+/* ── CHAMADA PARA AÇÃO FINAL ──
+   Secção centrada com halo dourado subtil (radial-gradient).
+   Convida o utilizador a marcar visita ou compor blend. */
+.x-cta{padding:140px 64px;text-align:center;background:radial-gradient(ellipse at 50% 100%,rgba(212,168,90,0.06),transparent 60%)}
+.x-cta .tag{font-family:var(--mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:24px}
+.x-cta h2{font-family:var(--sans);font-weight:300;font-size:clamp(40px,5vw,80px);line-height:1.0;letter-spacing:-0.025em;margin:0 0 24px;max-width:920px;margin-left:auto;margin-right:auto}
+.x-cta h2 em{font-family:var(--serif);font-style:italic;color:var(--gold);font-weight:400}
+.x-cta p{font-family:var(--serif);font-style:italic;font-size:20px;color:var(--ink-soft);margin:0 auto 36px;max-width:560px}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:14px 22px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;border:1px solid var(--rule-strong);background:transparent;color:var(--ink);cursor:pointer;transition:all .2s}
+.btn.primary{background:var(--gold);color:var(--bg);border-color:var(--gold)}
+.btn.primary:hover{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.btn:hover{border-color:var(--gold);color:var(--gold)}
+.actions{display:inline-flex;gap:12px}
+
+footer{padding:32px 40px;text-align:center;font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-muted)}
+
+@media(max-width:1000px){
+  .bar nav{display:none}
+  .bar{grid-template-columns:auto 1fr auto auto;gap:10px;padding:0 14px}
+  .bar .burger{display:flex}
+  .bar .order-btn{display:none}
+  .bar .status span:last-child{display:none}
+  .x-hero{padding:32px;min-height:72vh}
+  .x-hero .x-mark,.x-hero .x-coord{position:static;margin-bottom:24px}
+  .x-hero .x-coord{text-align:left}
+  .x-hero .x-foot{display:none}
+  .space-head{grid-template-columns:1fr;gap:24px;padding:0 24px 40px}
+  .gallery{grid-template-columns:1fr;grid-template-rows:auto}
+  .frame.big{grid-row:auto}
+  .ritual{grid-template-columns:1fr;padding:80px 24px;gap:40px}
+  .ritual-l{position:static}
+  .info{grid-template-columns:1fr}
+  .info-l{padding:64px 24px;border-right:none;border-bottom:1px solid var(--rule)}
+  .info-r{min-height:380px}
+  .x-cta{padding:80px 24px}
+  .ritual-step{grid-template-columns:40px 1fr;padding:24px}
+  .ritual-step .t{grid-column:1/-1;text-align:left;padding-left:64px}
+}
+@media(max-width:780px){.x-hero{padding:24px 20px;min-height:auto;padding-top:120px;padding-bottom:80px;display:block}.x-hero .x-mark,.x-hero .x-coord{position:relative;top:auto;left:auto;right:auto;text-align:left;margin-bottom:18px}.x-hero h1{font-size:clamp(48px,11vw,72px);margin-bottom:24px}.x-hero p{font-size:18px}.x-hero .x-foot{position:relative;bottom:auto;right:auto;margin-top:32px;display:block}.hero-data{flex-wrap:wrap;gap:16px;margin-top:32px}.hero-datum{flex:none;width:calc(50% - 12px);padding-right:0;border-right:none !important;padding-left:0 !important}.space{padding:64px 0}.space-head{padding:0 20px 32px;gap:18px}.space-head h2{font-size:32px}.gallery{grid-template-columns:1fr}.frame.big{grid-row:auto}.frame{min-height:320px;aspect-ratio:16/10}.frame.big{aspect-ratio:16/11}.ritual{padding:64px 20px;gap:32px}.ritual-l h2{font-size:32px}.ritual-step{grid-template-columns:40px 1fr;padding:20px;gap:14px}.ritual-step .ix{font-size:32px}.ritual-step .body .h{font-size:16px}.ritual-step .t{grid-column:1/-1;text-align:left;padding-left:54px;margin-top:-6px}.info-l{padding:48px 20px}.info-r{min-height:320px}.info-row{grid-template-columns:1fr;gap:6px;padding:14px 0}.x-cta{padding:64px 20px}.x-cta h2{font-size:36px}.actions{flex-direction:column;width:100%}.actions .btn{justify-content:center}}
+/* ── GLOSSÁRIO — tooltips hover para termos técnicos ──
+   Termos como "blend" ou "caramelização" ficam sublinhados
+   com estilo pontilhado e cor dourada. Ao fazer hover, surge
+   uma caixa explicativa posicionada com position:absolute.
+   A seta triangular é feita com o truque CSS de borders
+   transparentes + border-top com cor. */
+.gloss{color:var(--gold);text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;text-decoration-color:rgba(212,168,90,0.4);cursor:help;position:relative;display:inline}
+.gloss .gloss-box{visibility:hidden;opacity:0;position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);background:var(--bg-3);border:1px solid var(--rule-strong);padding:12px 16px;font-family:var(--sans);font-size:12px;font-weight:400;line-height:1.55;color:var(--ink-soft);letter-spacing:0;text-transform:none;white-space:normal;width:240px;z-index:60;pointer-events:none;transition:opacity .2s,visibility .2s;font-style:normal}
+.gloss .gloss-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--rule-strong)}
+.gloss:hover .gloss-box{visibility:visible;opacity:1}
+.gloss .gloss-box .gloss-title{display:block;font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+
+/* ── MICRO-ANIMAÇÕES — scroll reveal + contadores ──
+   Sistema de animações ao scroll usando IntersectionObserver.
+   A classe .reveal define o estado inicial (invisível, 20px abaixo).
+   A classe .revealed é adicionada pelo JS quando o elemento
+   entra no viewport, disparando a transição CSS.
+   
+   Segurança: só funciona quando html.anim está presente
+   (adicionado pelo JS). Se o JS falhar, tudo fica visível.
+   
+   Acessibilidade: @media prefers-reduced-motion desliga tudo
+   para utilizadores com sensibilidade a movimento. */
+@media(max-width:600px){.gloss .gloss-box{left:0;transform:none;max-width:200px;font-size:11px}}
+html.anim .reveal{opacity:0;transform:translateY(20px)}
+html.anim .reveal.revealed{opacity:1;transform:translateY(0);transition:opacity .5s ease-out,transform .5s ease-out}
+@media(prefers-reduced-motion:reduce){html.anim .reveal,html.anim .reveal.revealed{opacity:1;transform:none;transition:none}}
+
+@media(max-width:480px){.x-hero h1{font-size:clamp(36px,10vw,56px);margin-bottom:18px}.x-hero p{font-size:16px}.hero-data{flex-direction:column;gap:12px}.hero-datum{width:100%;border-right:none !important;padding-left:0 !important}.frame .caption{font-size:13px;bottom:40px}.ritual-step .ix{font-size:28px}.info-row .v{font-size:14px}}
+</style>
+<script>
+/* Ativar classe de animação antes do primeiro paint para evitar flash */
+(function(){if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)document.documentElement.classList.add('anim')})();
+</script>
+</head>
+<body>
+
+<div class="bar">
+  <a class="logo" href="Microsite-Tech.html"><span class="logo-dot">●</span><span>O.ALQUIMISTA</span></a>
+  <nav>
+    <a href="Microsite-Tech.html#sobre">/sobre</a>
+    <a href="Processo.html">/processo</a>
+    <a href="Biblioteca.html">/biblioteca</a>
+    <a href="Microsite-Tech.html#blend">/criar</a>
+    <a class="active" href="Experiencia.html">/experiência</a>
+  </nav>
+  <div class="status"><span class="pulse"></span><span>lab&nbsp;ativo</span></div>
+  <a class="order-btn" href="Encomendar.html">Marcar →</a>
+<button class="burger" aria-label="Abrir menu de navegação" onclick="document.querySelector('.bar').classList.toggle('open')"><span></span><span></span><span></span></button>
+</div>
+<div class="mob-menu">
+  <a href="Microsite-Tech.html#sobre">/sobre</a>
+  <a href="Processo.html">/processo</a>
+  <a href="Biblioteca.html">/biblioteca</a>
+  <a href="Microsite-Tech.html#blend">/criar</a>
+  <a class="active" href="Experiencia.html">/experiência</a>
+  <a href="Encomendar.html" class="mob-cta">Marcar visita →</a>
+</div>
+
+<main>
+
+<!-- HERO -->
+<section class="x-hero">
+  <div class="bg"></div>
+  <div class="x-mark">a experiência presencial</div>
+  <div class="x-coord">
+    <span class="gold">38.7064°N · 9.1726°W</span><br/>
+    Lisboa · 1200‑690<br/>
+    Janelas Verdes 14
+  </div>
+  <div class="content">
+    <h1>O laboratório<br/>tem um <em>endereço.</em></h1>
+    <p>Entrar no laboratório é vestir a bata. Cada visita é um ensaio com hipótese, método e resultado. Só que o resultado bebe-se.</p>
+    <div class="hero-data">
+      <div class="hero-datum"><span class="hd-val">03</span><span class="hd-key">fases do método</span></div>
+      <div class="hero-datum"><span class="hd-val">196°C</span><span class="hd-key">caramelização do grão</span></div>
+      <div class="hero-datum"><span class="hd-val">±0,1g</span><span class="hd-key">precisão na dose</span></div>
+      <div class="hero-datum"><span class="hd-val">847</span><span class="hd-key">provas de sabor</span></div>
+    </div>
+  </div>
+  <div class="x-foot">ter–sáb · <span class="gold">09h–19h</span></div>
+</section>
+
+<!-- GALLERY (visual block) -->
+<section class="space">
+  <div class="space-head">
+    <div>
+      <div class="tag">/01 — o método</div>
+      <h2>Cada chávena é um <em>ensaio.</em></h2>
+    </div>
+    <p class="lede">Três fases. Precisão de laboratório. O mesmo rigor que se aplica a um tubo de ensaio, aplicado ao grão. Porque um bom café não se improvisa, calibra-se.</p>
+  </div>
+  <div class="gallery">
+    <div class="frame big">
+      <img src="img/lucid-origin_FOTO_02_—_A_Prova_—_cliente_e_torrador_topo_direito_Editorial_photograph_of_-0.jpg" alt="Dois alquimistas examinam a amostra lado a lado na bancada de mármore" loading="lazy"/>
+      <span class="num">FASE 01</span>
+      <span class="lbl">observação · prova de sabor</span>
+      <span class="caption">Dois pares de olhos sobre a mesma amostra. No laboratório, o revisão é feita a dois, cada nota aromática é uma variável que se confirma na bancada.</span>
+    </div>
+    <div class="frame">
+      <img src="img/lucid-origin_FOTO_03_—_O_Detalhe_—_mãos_e_grãos_fundo_direito_Close-up_editorial_photog-0 (1).jpg" alt="Mãos pesam grãos verdes com precisão de laboratório" loading="lazy"/>
+      <span class="num">FASE 02</span>
+      <span class="lbl">dose · 0,1g de precisão</span>
+      <span class="caption">A diferença entre um café bom e o seu café cabe em 0,3 gramas. Medimos com precisão de laboratório. Porque o sabor é uma equação.</span>
+    </div>
+    <div class="frame">
+      <img src="img/lucid-origin_Professional_editorial_photograph_of_a_specialty_coffee_roaster_at_work._Person_-0.jpg" alt="O torrador controla a torra no Probat" loading="lazy"/>
+      <span class="num">FASE 03</span>
+      <span class="lbl">caramelização · 196°c</span>
+      <span class="caption">A 196°C a <span class="gloss">caramelização<span class="gloss-box"><span class="gloss-title">Caramelização</span>Reação química que ocorre a partir dos 196°C durante a torra. Os açúcares naturais do grão transformam-se, criando notas de caramelo, corpo e cor castanha.</span></span> começa. O grão verde torna-se fórmula, e o resultado do ensaio extrai-se em trinta segundos de pressão.</span>
+    </div>
+  </div>
+</section>
+
+<!-- RITUAL -->
+<section class="ritual">
+  <div class="ritual-l">
+    <div class="tag">/02 — o método</div>
+    <h2>Vinte minutos<br/>na sua <em>bancada.</em></h2>
+    <p>Não é uma demonstração. É uma sessão a dois: o cliente e o torrador. Cinco etapas, sem improvisos, e um resultado que só existe uma vez.</p>
+  </div>
+  <div class="ritual-r">
+    <div class="ritual-step"><span class="ix">i.</span><div class="body"><div class="h">Chegada e prova de aroma</div><div class="d">Receção com chá frio. Cheira-se o grão antes de preparar, em estado puro.</div></div><span class="t">+0 min</span></div>
+    <div class="ritual-step"><span class="ix">ii.</span><div class="body"><div class="h">Calibração da moagem</div><div class="d">O torrador acerta moinho e dose para o seu nível de torra específico. Aprende-se a olhar.</div></div><span class="t">+4 min</span></div>
+    <div class="ritual-step"><span class="ix">iii.</span><div class="body"><div class="h">Primeira prova · espresso</div><div class="d">25 segundos, 36g de líquido. A primeira chávena é sempre só sua.</div></div><span class="t">+9 min</span></div>
+    <div class="ritual-step"><span class="ix">iv.</span><div class="body"><div class="h">Segunda prova · filtro <span class="gloss">V60<span class="gloss-box"><span class="gloss-title">V60</span>Método de extração por filtro em forma de cone com ângulo de 60°. Produz um café limpo e aromático, revelando as notas mais subtis do blend.</span></span></div><div class="d">Mesma fórmula, outro método. Para perceber como o grão muda de carácter.</div></div><span class="t">+14 min</span></div>
+    <div class="ritual-step"><span class="ix">v.</span><div class="body"><div class="h">Embalagem e arquivo</div><div class="d">250g em <span class="gloss">saco kraft<span class="gloss-box"><span class="gloss-title">Saco Kraft</span>Embalagem de papel resistente, feita a partir de fibra de madeira não branqueada. Protege o café da luz e humidade, mantendo a frescura do grão torrado.</span></span> com etiqueta <span class="gloss">foil<span class="gloss-box"><span class="gloss-title">Foil</span>Película metálica fina, neste caso dourada, usada para gravar a fórmula na etiqueta do blend. Técnica de impressão a quente que dá um acabamento premium.</span></span> dourada. Fórmula gravada no arquivo do laboratório.</div></div><span class="t">+18 min</span></div>
+  </div>
+</section>
+
+<!-- INFO + MAP -->
+<section class="info">
+  <div class="info-l">
+    <div class="tag">/03 — encontrar-nos</div>
+    <h2>Como chegar e <em>quando.</em></h2>
+    <div class="info-row">
+      <div class="k">Endereço</div>
+      <div class="v">Rua das Janelas Verdes 14<br/>1200‑690 Lisboa<br/><small>entrada por porta de cobre, em frente ao Museu Nacional de Arte Antiga</small></div>
+    </div>
+    <div class="info-row">
+      <div class="k">Horário</div>
+      <div class="v"><span class="gold">terça a sábado</span> · 09h00 – 19h00<br/><small>encerrado domingo e segunda · sessões com marcação prévia</small></div>
+    </div>
+    <div class="info-row">
+      <div class="k">Como chegar</div>
+      <div class="v">Comboio · Santos (4 min a pé)<br/>Elétrico 15E · Cais do Sodré → Belém<br/><small>parque na Avenida 24 de Julho · €1,20/h</small></div>
+    </div>
+    <div class="info-row">
+      <div class="k">Contacto</div>
+      <div class="v"><span class="gold">+351 21 396 04 18</span><br/>lab@oalquimista.pt<br/><small>respondemos em 24h em dia útil</small></div>
+    </div>
+  </div>
+  <div class="info-r">
+    <div class="map">
+      <svg xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 600 600">
+        <!-- river Tagus suggestion -->
+        <path d="M 0 420 Q 150 440 300 425 T 600 410 L 600 600 L 0 600 Z" fill="rgba(212,168,90,0.04)" stroke="rgba(212,168,90,0.15)" stroke-width="1"/>
+        <!-- streets -->
+        <path d="M 60 200 L 540 220" stroke="rgba(232,230,224,0.10)" stroke-width="1" fill="none"/>
+        <path d="M 80 280 L 560 290" stroke="rgba(232,230,224,0.10)" stroke-width="1" fill="none"/>
+        <path d="M 100 360 L 580 350" stroke="rgba(232,230,224,0.14)" stroke-width="1.5" fill="none"/>
+        <path d="M 200 80 L 220 580" stroke="rgba(232,230,224,0.08)" stroke-width="1" fill="none"/>
+        <path d="M 320 60 L 340 580" stroke="rgba(232,230,224,0.10)" stroke-width="1" fill="none"/>
+        <path d="M 440 80 L 460 580" stroke="rgba(232,230,224,0.08)" stroke-width="1" fill="none"/>
+        <!-- cross at pin -->
+        <line x1="280" y1="300" x2="320" y2="300" stroke="#d4a85a" stroke-width="0.5" opacity="0.4"/>
+        <line x1="300" y1="280" x2="300" y2="320" stroke="#d4a85a" stroke-width="0.5" opacity="0.4"/>
+      </svg>
+      <span class="coord">38.7064°N<br/><span class="gold">9.1726°W</span><br/>elev · 12 m</span>
+      <span class="compass">N</span>
+      <span class="pin"></span>
+      <span class="pin-label">Janelas Verdes 14</span>
+      <span class="scale">200 m</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="x-cta">
+  <div class="tag">/marcação</div>
+  <h2>Reserve a sua <em>bancada.</em></h2>
+  <p>Vinte minutos para extrair a primeira chávena do seu blend, connosco, com o torrador presente.</p>
+  <div class="actions">
+    <a class="btn primary" href="Encomendar.html">Marcar visita →</a>
+    <a class="btn" href="Microsite-Tech.html#blend">Compor blend</a>
+  </div>
+</section>
+
+</main>
+<footer>© 2026 O Alquimista · Laboratório do Grão</footer>
+
+<script>
+/* --- MICRO-ANIMAÇÕES --- */
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  /* Marcar os elementos que vão animar ao scroll.
+     Usamos querySelectorAll com cada selector CSS para
+     adicionar a classe .reveal via JavaScript (não no HTML)
+     para que, se o JS falhar, tudo fique visível. */
+  '.space-head,.frame,.ritual-l,.ritual-step,.info-l,.info-row,.x-cta .tag,.x-cta h2,.x-cta p,.x-cta .actions'.split(',').forEach(function(sel){
+    document.querySelectorAll(sel.trim()).forEach(function(el){ el.classList.add('reveal'); });
+  });
+  /* Criar o observador de interseção (IntersectionObserver).
+     Quando um elemento com .reveal fica 12% visível no viewport,
+     adicionamos .revealed que dispara a transição CSS.
+     O stagger de 50ms entre irmãos cria o efeito de cascata. */
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var p=e.target.parentElement;
+      var sibs=p?Array.prototype.slice.call(p.querySelectorAll(':scope > .reveal:not(.revealed)')):[];
+      var idx=sibs.indexOf(e.target);
+      var delay=Math.max(0,idx)*50;
+      setTimeout(function(){ e.target.classList.add('revealed'); },Math.min(delay,250));
+      io.unobserve(e.target);
+    });
+  },{threshold:0.12,rootMargin:'0px 0px -30px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* Animação dos contadores numéricos.
+     Quando o número entra no viewport, conta de 0 até ao valor
+     final usando requestAnimationFrame para fluidez a 60fps.
+     O easing cúbico (ease-out) faz a contagem desacelerar no fim. */
+  document.querySelectorAll('.hd-val').forEach(function(el){
+    var cio = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        var raw=e.target.textContent.trim();
+        var m=raw.match(/^([^\d]*)(\d+)(.*)$/);
+        if(!m) return;
+        var pre=m[1],tgt=parseInt(m[2]),suf=m[3],t0=performance.now();
+        (function tick(now){
+          var p=Math.min((now-t0)/1000,1);
+          var ease=1-Math.pow(1-p,3);
+          e.target.textContent=pre+Math.round(tgt*ease)+suf;
+          if(p<1) requestAnimationFrame(tick);
+        })(t0);
+        cio.unobserve(e.target);
+      });
+    },{threshold:0.5});
+    cio.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
