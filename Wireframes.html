@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>O Alquimista · Wireframes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#1a1a1a;font-family:Inter,system-ui,sans-serif}
+  /* WIREFRAME visual language */
+  .wf{
+    --w-bg:#f5f3ee;        /* paper */
+    --w-bg-2:#ebe7df;
+    --w-ink:#2a2826;
+    --w-ink-soft:#807c74;
+    --w-rule:#c8c2b6;
+    --w-rule-strong:#8a847a;
+    --w-accent:#5a544a;    /* gold stand-in */
+    --w-mono:'JetBrains Mono',monospace;
+    --w-sans:'Inter',sans-serif;
+    background:var(--w-bg);
+    color:var(--w-ink);
+    font-family:var(--w-sans);
+    width:100%;height:100%;position:relative;overflow:hidden;
+  }
+  .wf *{box-sizing:border-box}
+  .wf-bar{position:absolute;left:0;right:0;top:0;height:48px;border-bottom:1px solid var(--w-rule-strong);display:flex;align-items:center;padding:0 20px;gap:24px;font-family:var(--w-mono);font-size:11px;background:var(--w-bg)}
+  .wf-bar .logo{font-weight:600;letter-spacing:0.06em}
+  .wf-bar .logo::before{content:'●';margin-right:8px;color:var(--w-accent)}
+  .wf-bar nav{display:flex;gap:18px;color:var(--w-ink-soft)}
+  .wf-bar nav a.act{color:var(--w-ink);font-weight:600}
+  .wf-bar .right{margin-left:auto;display:flex;align-items:center;gap:14px}
+  .wf-bar .pill{border:1px solid var(--w-rule-strong);padding:5px 12px;letter-spacing:0.08em}
+  .wf-bar .cta{background:var(--w-accent);color:var(--w-bg);padding:6px 14px;letter-spacing:0.1em;text-transform:uppercase}
+  .wf-bar .burger{width:30px;height:24px;border:1px solid var(--w-rule-strong);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px}
+  .wf-bar .burger span{width:12px;height:1px;background:var(--w-ink);display:block}
+
+  /* primitives */
+  .box{border:1px dashed var(--w-rule-strong);background:var(--w-bg-2);position:relative}
+  .box.solid{border-style:solid}
+  .box.fill{background:var(--w-rule)}
+  .box.cross::before,.box.cross::after{content:'';position:absolute;inset:0;border-color:var(--w-rule-strong)}
+  .box.cross::before{border-top:1px dashed var(--w-rule-strong);transform:rotate(0);top:0;left:0;right:0;height:100%;background:linear-gradient(to bottom right,transparent calc(50% - 1px),var(--w-rule-strong) calc(50%),transparent calc(50% + 1px));opacity:0.4}
+  .box.cross::after{background:linear-gradient(to top right,transparent calc(50% - 1px),var(--w-rule-strong) calc(50%),transparent calc(50% + 1px));opacity:0.4}
+  .lbl{position:absolute;font-family:var(--w-mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--w-ink-soft);background:var(--w-bg);padding:2px 6px}
+  .lbl.tl{top:6px;left:6px}.lbl.tr{top:6px;right:6px}.lbl.bl{bottom:6px;left:6px}.lbl.br{bottom:6px;right:6px}
+  .lbl.center{top:50%;left:50%;transform:translate(-50%,-50%);background:transparent;color:var(--w-ink);font-size:11px;letter-spacing:0.18em;font-weight:500}
+  .txt-line{height:8px;background:var(--w-rule);border-radius:1px;margin-bottom:6px}
+  .txt-line.h1{height:24px;background:var(--w-ink);border-radius:2px;margin-bottom:14px}
+  .txt-line.h2{height:18px;background:var(--w-ink-soft);margin-bottom:10px}
+  .txt-line.short{width:60%}
+  .txt-line.mid{width:80%}
+  .row{display:flex;gap:8px;align-items:center}
+  .grid{display:grid;gap:1px;background:var(--w-rule-strong)}
+  .grid > *{background:var(--w-bg-2)}
+  .meta-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--w-rule-strong);border:1px solid var(--w-rule-strong)}
+  .meta-strip > div{background:var(--w-bg);padding:8px 10px;font-family:var(--w-mono);font-size:9px;letter-spacing:0.14em;color:var(--w-ink-soft);text-transform:uppercase}
+  .meta-strip > div .v{color:var(--w-ink);font-weight:500;margin-top:3px;display:block}
+  .chip{border:1px solid var(--w-rule-strong);padding:5px 10px;font-family:var(--w-mono);font-size:9px;letter-spacing:0.08em;color:var(--w-ink-soft)}
+  .chip.act{background:var(--w-accent);color:var(--w-bg);border-color:var(--w-accent)}
+  .btn-w{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--w-rule-strong);padding:8px 14px;font-family:var(--w-mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--w-ink-soft)}
+  .btn-w.prim{background:var(--w-accent);color:var(--w-bg);border-color:var(--w-accent)}
+  .annot{position:absolute;font-family:var(--w-mono);font-size:9px;letter-spacing:0.1em;color:var(--w-accent);background:var(--w-bg);padding:2px 6px;border:1px solid var(--w-accent);border-radius:2px;pointer-events:none;z-index:5}
+  .arrow{position:absolute;width:32px;height:1px;background:var(--w-accent)}
+  .arrow::after{content:'';position:absolute;right:-1px;top:-3px;width:7px;height:7px;border-top:1px solid var(--w-accent);border-right:1px solid var(--w-accent);transform:rotate(45deg)}
+
+  /* Page-specific layouts */
+  /* === LANDING DESKTOP === */
+  .ld{padding:48px 0 0}
+  .ld .hero{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--w-rule-strong);min-height:520px}
+  .ld .hero-l{padding:36px 32px;border-right:1px solid var(--w-rule-strong);display:flex;flex-direction:column;gap:18px;justify-content:space-between}
+  .ld .hero-r{position:relative;background:var(--w-bg-2);display:grid;place-items:center}
+  .ld .hero-r .bean{width:50%;aspect-ratio:1;border:2px dashed var(--w-rule-strong);border-radius:50%;position:relative}
+  .ld .hero-r .bean::before{content:'GRÃO · SVG';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--w-mono);font-size:11px;letter-spacing:0.18em;color:var(--w-ink-soft)}
+  .ld .about{padding:40px 32px;border-bottom:1px solid var(--w-rule-strong);display:grid;grid-template-columns:1fr 1fr;gap:48px}
+  .ld .blend{padding:40px 32px;border-bottom:1px solid var(--w-rule-strong)}
+  .ld .blend-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--w-rule-strong);border:1px solid var(--w-rule-strong);min-height:380px}
+  .ld .blend-canvas{background:var(--w-bg-2);position:relative;display:grid;place-items:center}
+  .ld .blend-canvas .bean{width:55%;aspect-ratio:1;border:2px dashed var(--w-rule-strong);border-radius:50%;display:grid;place-items:center;font-family:var(--w-mono);font-size:11px;letter-spacing:0.18em;color:var(--w-ink-soft)}
+  .ld .builder{background:var(--w-bg);padding:24px;display:flex;flex-direction:column;gap:18px}
+  .ld .builder h4{font-family:var(--w-mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--w-ink-soft);margin:0 0 8px;font-weight:500}
+
+  /* MOBILE wireframes */
+  .mb-bar{height:48px;border-bottom:1px solid var(--w-rule-strong);display:flex;align-items:center;padding:0 14px;gap:10px;font-family:var(--w-mono);font-size:10px}
+  .mb-bar .logo{font-weight:600;letter-spacing:0.06em}.mb-bar .logo::before{content:'●';margin-right:6px;color:var(--w-accent)}
+  .mb-bar .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .mb-bar .dot{width:6px;height:6px;background:#6b8a4a;border-radius:50%}
+  .mb-bar .burger{width:30px;height:24px;border:1px solid var(--w-rule-strong);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px}
+  .mb-bar .burger span{width:12px;height:1px;background:var(--w-ink);display:block}
+
+  /* Open menu state for mobile annotation */
+  .mb-menu{position:absolute;left:0;right:0;top:48px;background:var(--w-bg);border-bottom:1px solid var(--w-rule-strong);padding:18px 14px;font-family:var(--w-mono);font-size:11px;display:flex;flex-direction:column;gap:0}
+  .mb-menu a{padding:12px 4px;border-bottom:1px solid var(--w-rule);color:var(--w-ink-soft)}
+  .mb-menu a.act{color:var(--w-ink);font-weight:600}
+  .mb-menu .cta{margin-top:14px;background:var(--w-accent);color:var(--w-bg);text-align:center;padding:12px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600}
+</style>
+
+<!-- React + Babel for design canvas -->
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { DesignCanvas, DCSection, DCArtboard } = window;
+
+// ============ DESKTOP WIREFRAMES ============
+
+function LandingDesktop(){
+  return (
+    <div className="wf">
+      <div className="wf-bar">
+        <span className="logo">O.ALQUIMISTA</span>
+        <nav>
+          <a className="act">/sobre</a><a>/processo</a><a>/biblioteca</a><a>/criar</a><a>/experiência</a>
+        </nav>
+        <div className="right">
+          <span className="pill">● lab ativo</span>
+          <span className="cta">Compor →</span>
+        </div>
+      </div>
+      <div style={{paddingTop:48}}>
+        {/* HERO */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',borderBottom:'1px solid var(--w-rule-strong)',minHeight:520}}>
+          <div style={{padding:'36px 32px',borderRight:'1px solid var(--w-rule-strong)',display:'flex',flexDirection:'column',gap:18,justifyContent:'space-between'}}>
+            <div>
+              <div className="meta-strip" style={{marginBottom:32}}>
+                <div>LOTE<span className="v">#2026‑Q2</span></div>
+                <div>TORRA<span className="v">3 dias</span></div>
+                <div>STOCK<span className="v">142kg</span></div>
+              </div>
+              <div className="txt-line h1" style={{width:'90%'}}/>
+              <div className="txt-line h1" style={{width:'70%'}}/>
+              <div style={{marginTop:24}}>
+                <div className="txt-line"/><div className="txt-line"/><div className="txt-line short"/>
+              </div>
+            </div>
+            <div className="row" style={{gap:12}}>
+              <span className="btn-w prim">Compor blend →</span>
+              <span className="btn-w">Visitar cafetaria</span>
+            </div>
+          </div>
+          <div style={{position:'relative',background:'var(--w-bg-2)',display:'grid',placeItems:'center'}}>
+            <div style={{width:'50%',aspectRatio:1,border:'2px dashed var(--w-rule-strong)',borderRadius:'50%',position:'relative',display:'grid',placeItems:'center'}}>
+              <span style={{fontFamily:'var(--w-mono)',fontSize:11,letterSpacing:'0.18em',color:'var(--w-ink-soft)'}}>BEAN · SVG</span>
+            </div>
+            <span className="lbl tl">crosshair · grid</span>
+            <span className="lbl br">3 ringues</span>
+          </div>
+        </div>
+        {/* ABOUT */}
+        <div style={{padding:'40px 32px',borderBottom:'1px solid var(--w-rule-strong)',display:'grid',gridTemplateColumns:'1fr 1fr',gap:48}}>
+          <div><div className="txt-line h2" style={{width:'80%'}}/><div className="txt-line h2" style={{width:'60%'}}/></div>
+          <div><div className="txt-line"/><div className="txt-line"/><div className="txt-line"/><div className="txt-line short"/></div>
+        </div>
+        <div className="meta-strip" style={{gridTemplateColumns:'repeat(4,1fr)',border:'none',borderBottom:'1px solid var(--w-rule-strong)'}}>
+          <div style={{padding:'18px 16px',textAlign:'center'}}>120<span className="v">ORIGENS</span></div>
+          <div style={{padding:'18px 16px',textAlign:'center'}}>04<span className="v">GRÃOS</span></div>
+          <div style={{padding:'18px 16px',textAlign:'center'}}>100<span className="v">NÍVEIS</span></div>
+          <div style={{padding:'18px 16px',textAlign:'center'}}>∅<span className="v">SINTÉTICOS</span></div>
+        </div>
+        {/* BLEND BUILDER — main piece */}
+        <div style={{padding:'40px 32px',borderBottom:'1px solid var(--w-rule-strong)'}}>
+          <div className="txt-line h2" style={{width:'40%'}}/>
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:1,background:'var(--w-rule-strong)',border:'1px solid var(--w-rule-strong)',minHeight:380,marginTop:18}}>
+            <div style={{background:'var(--w-bg-2)',position:'relative',display:'grid',placeItems:'center'}}>
+              <div style={{width:'55%',aspectRatio:1,border:'2px dashed var(--w-rule-strong)',borderRadius:'50%',display:'grid',placeItems:'center',fontFamily:'var(--w-mono)',fontSize:11,letterSpacing:'0.18em',color:'var(--w-ink-soft)'}}>BEAN MORPH</div>
+              <span className="lbl tl">● lab ativo</span>
+              <span className="lbl tr">B1·050·V·∅</span>
+              <span className="lbl bl">Cerrado Negro</span>
+              <span className="annot" style={{top:60,left:'50%',transform:'translateX(-50%)'}}>reactive · 600ms morph</span>
+            </div>
+            <div style={{background:'var(--w-bg)',padding:24,display:'flex',flexDirection:'column',gap:18}}>
+              <div>
+                <h4 style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',textTransform:'uppercase',color:'var(--w-ink-soft)',margin:'0 0 8px'}}>I · ORIGEM (4 cards 2×2)</h4>
+                <div className="grid" style={{gridTemplateColumns:'1fr 1fr'}}>
+                  <div style={{padding:'10px 12px',background:'var(--w-accent)',color:'var(--w-bg)',fontSize:11}}>B1 · Cerrado <span style={{opacity:0.7}}>brasil</span></div>
+                  <div style={{padding:'10px 12px',background:'var(--w-bg-2)',fontSize:11}}>E1 · Yirgache</div>
+                  <div style={{padding:'10px 12px',background:'var(--w-bg-2)',fontSize:11}}>C1 · Huila</div>
+                  <div style={{padding:'10px 12px',background:'var(--w-bg-2)',fontSize:11}}>G1 · Antigua</div>
+                </div>
+              </div>
+              <div>
+                <h4>II · TORRA (slider 0-100)</h4>
+                <div style={{height:24,background:'var(--w-bg-2)',border:'1px solid var(--w-rule-strong)',position:'relative'}}>
+                  <div style={{position:'absolute',left:'50%',top:'50%',transform:'translate(-50%,-50%)',width:14,height:14,background:'var(--w-accent)',borderRadius:'50%'}}/>
+                </div>
+              </div>
+              <div>
+                <h4>III · AROMA (6 chips)</h4>
+                <div className="row" style={{flexWrap:'wrap',gap:6}}>
+                  {['V','L','C','A','N','∅'].map((c,i)=><span key={c} className={'chip'+(i===0?' act':'')}>{c}</span>)}
+                </div>
+              </div>
+              <div>
+                <h4>IV · TOPPING (4 cells)</h4>
+                <div className="grid" style={{gridTemplateColumns:'repeat(4,1fr)'}}>
+                  {['∅','◐','◯','≋'].map((c,i)=><div key={c} style={{padding:'12px 4px',background:i===0?'var(--w-accent)':'var(--w-bg-2)',color:i===0?'var(--w-bg)':'var(--w-ink)',textAlign:'center',fontSize:14}}>{c}</div>)}
+                </div>
+              </div>
+              <div className="row" style={{justifyContent:'space-between',paddingTop:12,borderTop:'1px solid var(--w-rule-strong)'}}>
+                <span style={{fontFamily:'var(--w-sans)',fontSize:24,fontWeight:300}}>€ 14,80</span>
+                <span className="btn-w prim">Encomendar →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LandingMobile(){
+  return (
+    <div className="wf">
+      <div className="mb-bar">
+        <span className="logo">O.ALQUIMISTA</span>
+        <div className="right">
+          <span className="dot"/>
+          <span className="burger"><span/><span/><span/></span>
+        </div>
+      </div>
+      <div style={{padding:'24px 16px',display:'flex',flexDirection:'column',gap:18}}>
+        <div className="meta-strip"><div>LOTE<span className="v">#0418</span></div><div>3 DIAS</div><div>142KG</div></div>
+        <div><div className="txt-line h1"/><div className="txt-line h1" style={{width:'70%'}}/></div>
+        <div><div className="txt-line"/><div className="txt-line"/><div className="txt-line short"/></div>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          <span className="btn-w prim" style={{justifyContent:'center'}}>Compor blend →</span>
+          <span className="btn-w" style={{justifyContent:'center'}}>Visitar cafetaria</span>
+        </div>
+        <div style={{aspectRatio:1,background:'var(--w-bg-2)',position:'relative',display:'grid',placeItems:'center',border:'1px dashed var(--w-rule-strong)'}}>
+          <div style={{width:'55%',aspectRatio:1,border:'2px dashed var(--w-rule-strong)',borderRadius:'50%',display:'grid',placeItems:'center',fontFamily:'var(--w-mono)',fontSize:10,color:'var(--w-ink-soft)'}}>BEAN · SVG</div>
+        </div>
+        <div style={{padding:'20px 0',borderTop:'1px solid var(--w-rule-strong)',borderBottom:'1px solid var(--w-rule-strong)'}}>
+          <div className="txt-line h2" style={{width:'70%'}}/><div className="txt-line"/><div className="txt-line short"/>
+        </div>
+        <div>
+          <h4 style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',textTransform:'uppercase',color:'var(--w-ink-soft)',margin:'0 0 8px'}}>BLEND BUILDER (stack)</h4>
+          <div className="grid" style={{gridTemplateColumns:'1fr 1fr',marginBottom:12}}>
+            <div style={{padding:'10px 12px',background:'var(--w-accent)',color:'var(--w-bg)',fontSize:10}}>B1</div>
+            <div style={{padding:'10px 12px',background:'var(--w-bg-2)',fontSize:10}}>E1</div>
+            <div style={{padding:'10px 12px',background:'var(--w-bg-2)',fontSize:10}}>C1</div>
+            <div style={{padding:'10px 12px',background:'var(--w-bg-2)',fontSize:10}}>G1</div>
+          </div>
+          <div style={{height:24,background:'var(--w-bg-2)',border:'1px solid var(--w-rule-strong)',position:'relative',marginBottom:12}}>
+            <div style={{position:'absolute',left:'50%',top:'50%',transform:'translate(-50%,-50%)',width:14,height:14,background:'var(--w-accent)',borderRadius:'50%'}}/>
+          </div>
+          <div className="row" style={{flexWrap:'wrap',gap:6,marginBottom:12}}>
+            {['V','L','C','A','N','∅'].map((c,i)=><span key={c} className={'chip'+(i===0?' act':'')}>{c}</span>)}
+          </div>
+          <div className="grid" style={{gridTemplateColumns:'1fr 1fr',marginBottom:12}}>
+            {['∅','◐','◯','≋'].map((c,i)=><div key={c} style={{padding:12,background:i===0?'var(--w-accent)':'var(--w-bg-2)',color:i===0?'var(--w-bg)':'var(--w-ink)',textAlign:'center'}}>{c}</div>)}
+          </div>
+          <div style={{textAlign:'center',padding:'14px 0'}}>€ 14,80</div>
+          <span className="btn-w prim" style={{width:'100%',justifyContent:'center'}}>Encomendar →</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== ENCOMENDAR =====
+function EncomendarDesktop(){
+  return (
+    <div className="wf">
+      <div className="wf-bar">
+        <span className="logo">O.ALQUIMISTA</span>
+        <span style={{color:'var(--w-ink-soft)'}}>← Voltar ao laboratório</span>
+        <div className="right"><span className="pill">● cafetaria aberta</span></div>
+      </div>
+      <div style={{paddingTop:48}}>
+        <div style={{padding:'40px 32px',borderBottom:'1px solid var(--w-rule-strong)'}}>
+          <div className="txt-line h1" style={{width:'70%'}}/><div className="txt-line h1" style={{width:'50%'}}/>
+          <div style={{marginTop:14}}><div className="txt-line"/><div className="txt-line short"/></div>
+        </div>
+        <div style={{padding:'18px 32px',borderBottom:'1px solid var(--w-rule-strong)',display:'grid',gridTemplateColumns:'auto 1fr auto',gap:18,alignItems:'center'}}>
+          <div style={{width:48,height:48,border:'1px dashed var(--w-rule-strong)',borderRadius:'50%'}}/>
+          <div><div className="txt-line short"/><div className="txt-line short" style={{width:'30%'}}/></div>
+          <span className="btn-w">Editar blend</span>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 360px',borderBottom:'1px solid var(--w-rule-strong)'}}>
+          <div style={{padding:32,borderRight:'1px solid var(--w-rule-strong)',display:'flex',flexDirection:'column',gap:32}}>
+            <div>
+              <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:14}}>STEP 01 · DATA</div>
+              <div className="row" style={{justifyContent:'space-between',marginBottom:10}}>
+                <span style={{fontSize:14}}>Maio 2026</span>
+                <div className="row" style={{gap:6}}><span className="btn-w" style={{padding:'4px 8px'}}>‹</span><span className="btn-w" style={{padding:'4px 8px'}}>›</span></div>
+              </div>
+              <div className="grid" style={{gridTemplateColumns:'repeat(7,1fr)',border:'1px solid var(--w-rule-strong)'}}>
+                {Array.from({length:35},(_,i)=>{const isAct=i===15;const isDis=[0,1,7,8,14,21,22,28,29].includes(i);
+                  return <div key={i} style={{aspectRatio:'1.1/1',background:isAct?'var(--w-accent)':'var(--w-bg)',color:isAct?'var(--w-bg)':isDis?'var(--w-ink-soft)':'var(--w-ink)',display:'grid',placeItems:'center',fontFamily:'var(--w-mono)',fontSize:11,opacity:isDis?0.4:1}}>{i+1<=31?i+1:''}</div>;
+                })}
+              </div>
+            </div>
+            <div>
+              <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:14}}>STEP 02 · HORA</div>
+              <div className="grid" style={{gridTemplateColumns:'repeat(5,1fr)',border:'1px solid var(--w-rule-strong)'}}>
+                {['09:00','10:30','12:00','14:00','15:30','17:00','18:30'].map((t,i)=><div key={t} style={{padding:'14px 4px',textAlign:'center',background:i===3?'var(--w-accent)':'var(--w-bg)',color:i===3?'var(--w-bg)':'var(--w-ink)',fontFamily:'var(--w-mono)',fontSize:11,opacity:[2,6].includes(i)?0.4:1,textDecoration:[2,6].includes(i)?'line-through':'none'}}>{t}</div>)}
+              </div>
+            </div>
+            <div>
+              <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:14}}>STEP 03 · PESSOAS</div>
+              <div className="row" style={{gap:14,alignItems:'center'}}>
+                <span style={{fontSize:14}}>Pessoas</span>
+                <div className="row" style={{border:'1px solid var(--w-rule-strong)'}}>
+                  <span style={{width:36,height:36,display:'grid',placeItems:'center'}}>−</span>
+                  <span style={{width:36,height:36,display:'grid',placeItems:'center',color:'var(--w-accent)',fontWeight:600}}>2</span>
+                  <span style={{width:36,height:36,display:'grid',placeItems:'center'}}>+</span>
+                </div>
+                <span style={{marginLeft:'auto',fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)'}}>MAX 4</span>
+              </div>
+            </div>
+            <div>
+              <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:14}}>STEP 04 · CONTACTO</div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14}}>
+                <div className="box solid" style={{height:42}}><span className="lbl tl">NOME</span></div>
+                <div className="box solid" style={{height:42}}><span className="lbl tl">APELIDO</span></div>
+                <div className="box solid" style={{height:42,gridColumn:'1/-1'}}><span className="lbl tl">EMAIL</span></div>
+                <div className="box solid" style={{height:42,gridColumn:'1/-1'}}><span className="lbl tl">TELEFONE</span></div>
+              </div>
+            </div>
+          </div>
+          <div style={{padding:32,background:'var(--w-bg-2)',position:'sticky',top:48}}>
+            <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:18}}>RESUMO</div>
+            <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:18}}>
+              {['Data','Hora','Pessoas','Local','Blend'].map(k=><div key={k} className="row" style={{justifyContent:'space-between',padding:'8px 0',borderBottom:'1px solid var(--w-rule)'}}><span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)',letterSpacing:'0.14em'}}>{k.toUpperCase()}</span><span style={{fontSize:11}}>—</span></div>)}
+            </div>
+            <span className="btn-w prim" style={{width:'100%',justifyContent:'center',padding:14}}>Confirmar visita →</span>
+            <div style={{marginTop:16,fontFamily:'var(--w-mono)',fontSize:8,color:'var(--w-ink-soft)',textAlign:'center'}}>PAGAMENTO NA CAFETARIA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EncomendarMobile(){
+  return (
+    <div className="wf">
+      <div className="mb-bar">
+        <span className="logo">O.ALQ</span>
+        <span style={{color:'var(--w-ink-soft)',fontSize:10}}>← voltar</span>
+        <div className="right"><span className="dot"/><span className="burger"><span/><span/><span/></span></div>
+      </div>
+      <div style={{padding:'24px 16px',display:'flex',flexDirection:'column',gap:24}}>
+        <div><div className="txt-line h1"/><div className="txt-line h1" style={{width:'60%'}}/></div>
+        <div><div className="txt-line"/><div className="txt-line short"/></div>
+        <div className="box solid" style={{padding:14,display:'flex',flexDirection:'column',gap:8,alignItems:'stretch'}}>
+          <div className="row" style={{gap:10}}>
+            <div style={{width:36,height:36,border:'1px dashed var(--w-rule-strong)',borderRadius:'50%'}}/>
+            <div style={{flex:1}}><div className="txt-line short"/><div className="txt-line short" style={{width:'40%'}}/></div>
+          </div>
+          <span className="btn-w" style={{justifyContent:'center'}}>Editar</span>
+        </div>
+        <div>
+          <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:10}}>01 · DATA</div>
+          <div className="grid" style={{gridTemplateColumns:'repeat(7,1fr)',border:'1px solid var(--w-rule-strong)'}}>
+            {Array.from({length:21},(_,i)=>{const isAct=i===10;const isDis=[0,1,7,8,14].includes(i);
+              return <div key={i} style={{aspectRatio:'1/1',background:isAct?'var(--w-accent)':'var(--w-bg)',color:isAct?'var(--w-bg)':isDis?'var(--w-ink-soft)':'var(--w-ink)',display:'grid',placeItems:'center',fontFamily:'var(--w-mono)',fontSize:10,opacity:isDis?0.4:1}}>{i+1}</div>;
+            })}
+          </div>
+        </div>
+        <div>
+          <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:10}}>02 · HORA</div>
+          <div className="grid" style={{gridTemplateColumns:'repeat(3,1fr)',border:'1px solid var(--w-rule-strong)'}}>
+            {['09:00','10:30','12:00','14:00','15:30','17:00'].map((t,i)=><div key={t} style={{padding:'16px 4px',textAlign:'center',background:i===3?'var(--w-accent)':'var(--w-bg)',color:i===3?'var(--w-bg)':'var(--w-ink)',fontFamily:'var(--w-mono)',fontSize:11}}>{t}</div>)}
+          </div>
+        </div>
+        <div>
+          <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:10}}>03 · PESSOAS</div>
+          <div className="row" style={{gap:14}}>
+            <span style={{fontSize:13}}>Pessoas</span>
+            <div className="row" style={{border:'1px solid var(--w-rule-strong)',marginLeft:'auto'}}>
+              <span style={{width:44,height:44,display:'grid',placeItems:'center'}}>−</span>
+              <span style={{width:44,height:44,display:'grid',placeItems:'center',color:'var(--w-accent)',fontWeight:600}}>2</span>
+              <span style={{width:44,height:44,display:'grid',placeItems:'center'}}>+</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:10}}>04 · CONTACTO</div>
+          <div style={{display:'flex',flexDirection:'column',gap:10}}>
+            <div className="box solid" style={{height:46}}><span className="lbl tl">NOME</span></div>
+            <div className="box solid" style={{height:46}}><span className="lbl tl">APELIDO</span></div>
+            <div className="box solid" style={{height:46}}><span className="lbl tl">EMAIL</span></div>
+            <div className="box solid" style={{height:46}}><span className="lbl tl">TELEFONE</span></div>
+          </div>
+        </div>
+        <div style={{padding:16,background:'var(--w-bg-2)',border:'1px solid var(--w-rule-strong)'}}>
+          <div style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-ink-soft)',marginBottom:12}}>RESUMO</div>
+          {['Data','Hora','Pessoas','Blend'].map(k=><div key={k} className="row" style={{justifyContent:'space-between',padding:'6px 0',borderBottom:'1px solid var(--w-rule)'}}><span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)'}}>{k.toUpperCase()}</span><span style={{fontSize:11}}>—</span></div>)}
+          <span className="btn-w prim" style={{width:'100%',justifyContent:'center',padding:14,marginTop:14}}>Confirmar visita →</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== BIBLIOTECA =====
+function BibliotecaDesktop(){
+  return (
+    <div className="wf">
+      <div className="wf-bar">
+        <span className="logo">O.ALQUIMISTA</span>
+        <nav><a>/sobre</a><a>/processo</a><a className="act">/biblioteca</a><a>/criar</a><a>/experiência</a></nav>
+        <div className="right"><span className="pill">● lab ativo</span><span className="cta">Compor →</span></div>
+      </div>
+      <div style={{paddingTop:48}}>
+        <div style={{padding:'40px 32px',borderBottom:'1px solid var(--w-rule-strong)',display:'grid',gridTemplateColumns:'1fr auto',gap:32,alignItems:'end'}}>
+          <div>
+            <div className="txt-line h1" style={{width:'80%'}}/><div className="txt-line h1" style={{width:'60%'}}/>
+            <div style={{marginTop:12}}><div className="txt-line"/><div className="txt-line short"/></div>
+          </div>
+          <div className="meta-strip" style={{gridTemplateColumns:'1fr 1fr',minWidth:240}}>
+            <div>ARQUIVO<span className="v">12 fórmulas</span></div>
+            <div>UPDATE<span className="v">há 4 dias</span></div>
+            <div>ORIGENS<span className="v">04</span></div>
+            <div>AROMAS<span className="v">06</span></div>
+          </div>
+        </div>
+        {/* Filters */}
+        <div style={{padding:'20px 32px',borderBottom:'1px solid var(--w-rule-strong)',background:'var(--w-bg-2)',display:'flex',alignItems:'center',gap:24,flexWrap:'wrap'}}>
+          <div className="row" style={{gap:8}}>
+            <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)',letterSpacing:'0.18em'}}>INTENSIDADE</span>
+            <span className="chip act">Todas</span><span className="chip">Suave</span><span className="chip">Equilibrada</span><span className="chip">Intensa</span>
+          </div>
+          <div className="row" style={{gap:8}}>
+            <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)',letterSpacing:'0.18em'}}>AROMA</span>
+            <span className="chip act">Todos</span><span className="chip">Baunilha</span><span className="chip">Laranja</span><span className="chip">Cardamomo</span>
+          </div>
+          <span style={{marginLeft:'auto',fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)'}}>12 / 12</span>
+        </div>
+        {/* Grid 3-col */}
+        <div className="grid" style={{gridTemplateColumns:'repeat(3,1fr)'}}>
+          {Array.from({length:6},(_,i)=>(
+            <div key={i} style={{background:'var(--w-bg-2)',padding:24,display:'flex',flexDirection:'column',gap:14}}>
+              <div className="row" style={{justifyContent:'space-between'}}>
+                <span style={{fontFamily:'var(--w-mono)',fontSize:9,letterSpacing:'0.18em',color:'var(--w-accent)'}}>FÓRMULA Nº{['04','07','12','18','23','29'][i]}</span>
+                <div className="row" style={{gap:3}}>{[1,2,3].map(d=><span key={d} style={{width:7,height:7,borderRadius:'50%',background:d<=(i%3+1)?'var(--w-accent)':'var(--w-rule)'}}/>)}</div>
+              </div>
+              <div style={{width:60,height:80,margin:'4px auto',border:'1px dashed var(--w-rule-strong)',borderRadius:'50% 50% 45% 45%'}}/>
+              <div style={{textAlign:'center'}}>
+                <div className="txt-line h2" style={{width:'80%',margin:'0 auto 6px'}}/>
+                <div className="txt-line short" style={{width:'50%',margin:'0 auto'}}/>
+              </div>
+              <div style={{textAlign:'center',padding:'8px 0',borderTop:'1px solid var(--w-rule)',borderBottom:'1px solid var(--w-rule)',fontFamily:'var(--w-mono)',fontSize:10,color:'var(--w-ink-soft)'}}>X·00·V·∅</div>
+              <div className="row" style={{flexWrap:'wrap',gap:4,justifyContent:'center'}}>
+                <span className="chip" style={{padding:'3px 7px',fontSize:9}}>nota 1</span>
+                <span className="chip" style={{padding:'3px 7px',fontSize:9}}>nota 2</span>
+                <span className="chip" style={{padding:'3px 7px',fontSize:9}}>nota 3</span>
+              </div>
+              <div className="row" style={{justifyContent:'space-between',paddingTop:10,borderTop:'1px solid var(--w-rule)'}}>
+                <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)'}}>ORIGEM</span>
+                <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-accent)'}}>POR M.S.</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{padding:'48px 32px',textAlign:'center',background:'var(--w-bg-2)'}}>
+          <div className="txt-line h1" style={{width:'50%',margin:'0 auto 14px'}}/>
+          <div className="txt-line short" style={{width:'30%',margin:'0 auto 18px'}}/>
+          <span className="btn-w prim">Criar a tua fórmula →</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BibliotecaMobile(){
+  return (
+    <div className="wf">
+      <div className="mb-bar">
+        <span className="logo">O.ALQUIMISTA</span>
+        <div className="right"><span className="dot"/><span className="burger"><span/><span/><span/></span></div>
+      </div>
+      <div style={{padding:'24px 16px',display:'flex',flexDirection:'column',gap:20}}>
+        <div><div className="txt-line h1"/><div className="txt-line h1" style={{width:'60%'}}/></div>
+        <div><div className="txt-line"/><div className="txt-line short"/></div>
+        <div className="meta-strip" style={{gridTemplateColumns:'1fr 1fr'}}>
+          <div>ARQUIVO<span className="v">12 fórmulas</span></div><div>HÁ 4 DIAS</div><div>04 ORIGENS</div><div>06 AROMAS</div>
+        </div>
+      </div>
+      <div style={{padding:'14px 16px',borderTop:'1px solid var(--w-rule-strong)',borderBottom:'1px solid var(--w-rule-strong)',background:'var(--w-bg-2)',display:'flex',gap:8,overflowX:'auto'}}>
+        <span className="chip act">INT · Todas</span><span className="chip">Suave</span><span className="chip">Equilib.</span>
+        <span className="chip">→ scroll →</span>
+      </div>
+      <div style={{padding:16,display:'flex',flexDirection:'column',gap:16}}>
+        {Array.from({length:3},(_,i)=>(
+          <div key={i} style={{background:'var(--w-bg-2)',padding:20,border:'1px solid var(--w-rule-strong)',display:'flex',flexDirection:'column',gap:12}}>
+            <div className="row" style={{justifyContent:'space-between'}}>
+              <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-accent)'}}>FÓRMULA Nº0{4+i*3}</span>
+              <div className="row" style={{gap:3}}>{[1,2,3].map(d=><span key={d} style={{width:6,height:6,borderRadius:'50%',background:d<=(i%3+1)?'var(--w-accent)':'var(--w-rule)'}}/>)}</div>
+            </div>
+            <div style={{width:50,height:64,margin:'2px auto',border:'1px dashed var(--w-rule-strong)',borderRadius:'50% 50% 45% 45%'}}/>
+            <div style={{textAlign:'center'}}><div className="txt-line h2" style={{width:'70%',margin:'0 auto 4px'}}/><div className="txt-line short" style={{width:'40%',margin:'0 auto'}}/></div>
+            <div style={{textAlign:'center',padding:'6px 0',borderTop:'1px solid var(--w-rule)',borderBottom:'1px solid var(--w-rule)',fontFamily:'var(--w-mono)',fontSize:10,color:'var(--w-ink-soft)'}}>X·00·V·∅</div>
+          </div>
+        ))}
+        <div style={{textAlign:'center',color:'var(--w-ink-soft)',fontFamily:'var(--w-mono)',fontSize:10}}>↓ +9 cards</div>
+      </div>
+    </div>
+  );
+}
+
+// ===== PROCESSO =====
+function ProcessoDesktop(){
+  return (
+    <div className="wf">
+      <div className="wf-bar">
+        <span className="logo">O.ALQUIMISTA</span>
+        <nav><a>/sobre</a><a className="act">/processo</a><a>/biblioteca</a><a>/criar</a><a>/experiência</a></nav>
+        <div className="right"><span className="pill">● lab ativo</span><span className="cta">Compor →</span></div>
+      </div>
+      <div style={{paddingTop:48}}>
+        <div style={{padding:'56px 32px',textAlign:'center',borderBottom:'1px solid var(--w-rule-strong)'}}>
+          <div className="txt-line h1" style={{width:'70%',margin:'0 auto 8px'}}/>
+          <div className="txt-line h1" style={{width:'50%',margin:'0 auto 18px'}}/>
+          <div className="txt-line short" style={{width:'40%',margin:'0 auto'}}/>
+        </div>
+        {/* 4 steps alternating */}
+        {[
+          {flip:false,n:'i.',label:'01 · ORIGEM',vis:'globo + 4 pins'},
+          {flip:true,n:'ii.',label:'02 · TORRA',vis:'curva SVG + ponto FC'},
+          {flip:false,n:'iii.',label:'03 · AROMA',vis:'6 raios radiais'},
+          {flip:true,n:'iv.',label:'04 · FÓRMULA',vis:'composição 4 linhas'},
+        ].map((s,i)=>(
+          <div key={i} style={{padding:'48px 32px',display:'grid',gridTemplateColumns:'1fr 1fr',gap:48,borderBottom:'1px solid var(--w-rule-strong)',direction:s.flip?'rtl':'ltr'}}>
+            <div style={{direction:'ltr',display:'flex',flexDirection:'column',gap:14}}>
+              <div className="row" style={{gap:10,alignItems:'baseline'}}>
+                <span style={{fontFamily:'var(--w-mono)',fontSize:48,color:'var(--w-accent)',fontStyle:'italic',lineHeight:1}}>{s.n}</span>
+                <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)',letterSpacing:'0.22em'}}>{s.label}</span>
+              </div>
+              <div className="txt-line h1" style={{width:'80%'}}/><div className="txt-line h2" style={{width:'60%'}}/>
+              <div className="txt-line"/><div className="txt-line"/><div className="txt-line short"/>
+              <div className="meta-strip" style={{gridTemplateColumns:'1fr 1fr',maxWidth:300,marginTop:8}}>
+                <div>K1<span className="v">v1</span></div><div>K2<span className="v">v2</span></div><div>K3<span className="v">v3</span></div><div>K4<span className="v">v4</span></div>
+              </div>
+            </div>
+            <div style={{direction:'ltr',aspectRatio:1,background:'var(--w-bg-2)',border:'1px solid var(--w-rule-strong)',position:'relative',display:'grid',placeItems:'center'}}>
+              {[0,1,2,3].map(c=>{const pos=['tl','tr','bl','br'][c];const corner={tl:{top:14,left:14},tr:{top:14,right:14},bl:{bottom:14,left:14},br:{bottom:14,right:14}}[pos];return <span key={c} style={{position:'absolute',width:12,height:12,border:'1px solid var(--w-accent)',borderRight:pos.includes('l')?'1px solid var(--w-accent)':'none',borderBottom:pos.includes('t')?'1px solid var(--w-accent)':'none',borderLeft:pos.includes('r')?'1px solid var(--w-accent)':'none',borderTop:pos.includes('b')?'1px solid var(--w-accent)':'none',...corner}}/>;})}
+              <span style={{fontFamily:'var(--w-mono)',fontSize:11,color:'var(--w-ink-soft)',letterSpacing:'0.18em'}}>{s.vis}</span>
+              <span className="lbl tl" style={{top:32,left:32}}>read · v.04</span>
+              <span className="lbl br" style={{bottom:32,right:32}}>peak · 220°</span>
+            </div>
+          </div>
+        ))}
+        <div style={{padding:'56px 32px',textAlign:'center'}}>
+          <div className="txt-line h1" style={{width:'60%',margin:'0 auto 12px'}}/>
+          <div className="txt-line short" style={{width:'30%',margin:'0 auto 18px'}}/>
+          <div className="row" style={{gap:10,justifyContent:'center'}}>
+            <span className="btn-w prim">Compor blend →</span><span className="btn-w">Ver biblioteca</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProcessoMobile(){
+  return (
+    <div className="wf">
+      <div className="mb-bar"><span className="logo">O.ALQUIMISTA</span><div className="right"><span className="dot"/><span className="burger"><span/><span/><span/></span></div></div>
+      <div style={{padding:'32px 16px',textAlign:'center',borderBottom:'1px solid var(--w-rule-strong)'}}>
+        <div className="txt-line h1"/><div className="txt-line h1" style={{width:'60%',margin:'0 auto'}}/>
+        <div style={{marginTop:14}}><div className="txt-line short" style={{margin:'0 auto'}}/></div>
+      </div>
+      {['i.','ii.','iii.','iv.'].map((n,i)=>(
+        <div key={i} style={{padding:'32px 16px',borderBottom:'1px solid var(--w-rule-strong)',display:'flex',flexDirection:'column',gap:14}}>
+          <div className="row" style={{gap:10,alignItems:'baseline'}}>
+            <span style={{fontFamily:'var(--w-mono)',fontSize:36,color:'var(--w-accent)',fontStyle:'italic',lineHeight:1}}>{n}</span>
+            <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)',letterSpacing:'0.2em'}}>{['ORIGEM','TORRA','AROMA','FÓRMULA'][i]}</span>
+          </div>
+          <div className="txt-line h1" style={{width:'80%'}}/>
+          <div className="txt-line"/><div className="txt-line short"/>
+          <div style={{aspectRatio:1.1,background:'var(--w-bg-2)',border:'1px solid var(--w-rule-strong)',display:'grid',placeItems:'center',marginTop:6,fontFamily:'var(--w-mono)',fontSize:10,color:'var(--w-ink-soft)'}}>diagrama</div>
+        </div>
+      ))}
+      <div style={{padding:'40px 16px',textAlign:'center'}}>
+        <div className="txt-line h1"/><div className="txt-line h1" style={{width:'70%',margin:'0 auto 14px'}}/>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          <span className="btn-w prim" style={{justifyContent:'center'}}>Compor blend →</span>
+          <span className="btn-w" style={{justifyContent:'center'}}>Ver biblioteca</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== EXPERIENCIA =====
+function ExperienciaDesktop(){
+  return (
+    <div className="wf">
+      <div className="wf-bar">
+        <span className="logo">O.ALQUIMISTA</span>
+        <nav><a>/sobre</a><a>/processo</a><a>/biblioteca</a><a>/criar</a><a className="act">/experiência</a></nav>
+        <div className="right"><span className="pill">● cafetaria aberta</span><span className="cta">Marcar →</span></div>
+      </div>
+      <div style={{paddingTop:48}}>
+        {/* HERO full-bleed */}
+        <div style={{minHeight:480,padding:'40px 32px',background:'var(--w-bg-2)',position:'relative',display:'flex',alignItems:'flex-end',borderBottom:'1px solid var(--w-rule-strong)'}}>
+          <span className="lbl tl" style={{top:24,left:32}}>— a experiência presencial</span>
+          <span className="lbl tr" style={{top:24,right:32}}>38.7064°N · 9.1726°W<br/>Janelas Verdes 14</span>
+          <div>
+            <div className="txt-line h1" style={{height:36,width:520}}/>
+            <div className="txt-line h1" style={{height:36,width:380}}/>
+            <div style={{marginTop:18}}><div className="txt-line"/><div className="txt-line short"/></div>
+          </div>
+          <span className="lbl br" style={{bottom:32,right:32}}>ter–sáb · 09–19h</span>
+        </div>
+        {/* GALLERY */}
+        <div style={{padding:'40px 32px 32px'}}>
+          <div className="row" style={{justifyContent:'space-between',alignItems:'flex-end',marginBottom:24}}>
+            <div><div className="txt-line h2" style={{width:'80%'}}/><div className="txt-line h2" style={{width:'60%'}}/></div>
+            <div style={{maxWidth:280}}><div className="txt-line short"/><div className="txt-line short"/></div>
+          </div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'2fr 1fr',gridTemplateRows:'1fr 1fr',gap:1,background:'var(--w-rule-strong)',borderTop:'1px solid var(--w-rule-strong)',borderBottom:'1px solid var(--w-rule-strong)',height:380}}>
+          <div className="box cross" style={{gridRow:'1/3',background:'var(--w-bg-2)'}}><span className="lbl center">FOTO PRINCIPAL · BANCADA</span><span className="lbl br">N°01 / 03</span></div>
+          <div className="box cross" style={{background:'var(--w-bg-2)'}}><span className="lbl center">TORRADOR</span><span className="lbl br">N°02 / 03</span></div>
+          <div className="box cross" style={{background:'var(--w-bg-2)'}}><span className="lbl center">ARQUIVO</span><span className="lbl br">N°03 / 03</span></div>
+        </div>
+        {/* RITUAL */}
+        <div style={{padding:'48px 32px',display:'grid',gridTemplateColumns:'1fr 1fr',gap:48,borderBottom:'1px solid var(--w-rule-strong)'}}>
+          <div style={{position:'sticky',top:80,alignSelf:'flex-start'}}>
+            <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-accent)',letterSpacing:'0.2em'}}>02 — O RITUAL</span>
+            <div className="txt-line h1" style={{marginTop:12,width:'80%'}}/><div className="txt-line h1" style={{width:'60%'}}/>
+            <div className="txt-line"/><div className="txt-line short"/>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:1,background:'var(--w-rule-strong)',border:'1px solid var(--w-rule-strong)'}}>
+            {['i.','ii.','iii.','iv.','v.'].map((r,i)=>(
+              <div key={r} style={{background:'var(--w-bg)',padding:20,display:'grid',gridTemplateColumns:'40px 1fr auto',gap:14,alignItems:'center'}}>
+                <span style={{fontFamily:'var(--w-mono)',fontSize:24,color:'var(--w-accent)',fontStyle:'italic'}}>{r}</span>
+                <div><div className="txt-line short" style={{width:'70%'}}/><div className="txt-line short" style={{width:'50%'}}/></div>
+                <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)'}}>+{i*4}min</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* INFO + MAP */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',borderBottom:'1px solid var(--w-rule-strong)'}}>
+          <div style={{padding:'48px 32px',borderRight:'1px solid var(--w-rule-strong)'}}>
+            <span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-accent)',letterSpacing:'0.2em'}}>03 — ENCONTRAR-NOS</span>
+            <div className="txt-line h1" style={{marginTop:12,width:'70%'}}/>
+            {['Endereço','Horário','Como chegar','Contacto'].map(k=><div key={k} style={{display:'grid',gridTemplateColumns:'120px 1fr',gap:18,padding:'14px 0',borderBottom:'1px solid var(--w-rule)'}}><span style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)',letterSpacing:'0.18em'}}>{k.toUpperCase()}</span><div><div className="txt-line short"/><div className="txt-line short" style={{width:'40%'}}/></div></div>)}
+          </div>
+          <div className="box cross" style={{background:'var(--w-bg-2)',minHeight:380,border:'none'}}>
+            <span className="lbl center">MAPA · Lisboa<br/>pin animado</span>
+            <span className="lbl tl">38.7064°N · 9.1726°W</span>
+            <span className="lbl tr">N</span>
+            <span className="lbl bl">— 200m</span>
+          </div>
+        </div>
+        <div style={{padding:'56px 32px',textAlign:'center'}}>
+          <div className="txt-line h1" style={{width:'50%',margin:'0 auto 12px'}}/>
+          <div className="txt-line short" style={{width:'30%',margin:'0 auto 18px'}}/>
+          <div className="row" style={{gap:10,justifyContent:'center'}}>
+            <span className="btn-w prim">Marcar visita →</span><span className="btn-w">Compor blend</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExperienciaMobile(){
+  return (
+    <div className="wf">
+      <div className="mb-bar"><span className="logo">O.ALQUIMISTA</span><div className="right"><span className="dot"/><span className="burger"><span/><span/><span/></span></div></div>
+      <div style={{padding:'24px 16px 48px',background:'var(--w-bg-2)',borderBottom:'1px solid var(--w-rule-strong)'}}>
+        <div style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-accent)',letterSpacing:'0.18em',marginBottom:14}}>— a experiência</div>
+        <div style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)',marginBottom:24,letterSpacing:'0.14em'}}>38.7064°N · 9.1726°W<br/>Janelas Verdes 14</div>
+        <div className="txt-line h1"/><div className="txt-line h1" style={{width:'80%'}}/><div className="txt-line h1" style={{width:'60%'}}/>
+        <div style={{marginTop:18}}><div className="txt-line"/><div className="txt-line short"/></div>
+      </div>
+      <div style={{padding:'32px 16px',display:'flex',flexDirection:'column',gap:18}}>
+        <div className="txt-line h2"/>
+        <div className="box cross" style={{background:'var(--w-bg-2)',aspectRatio:1.4}}><span className="lbl center">FOTO 1 · bancada</span></div>
+        <div className="box cross" style={{background:'var(--w-bg-2)',aspectRatio:1.4}}><span className="lbl center">FOTO 2 · torrador</span></div>
+        <div className="box cross" style={{background:'var(--w-bg-2)',aspectRatio:1.4}}><span className="lbl center">FOTO 3 · arquivo</span></div>
+      </div>
+      <div style={{padding:'32px 16px',borderTop:'1px solid var(--w-rule-strong)',display:'flex',flexDirection:'column',gap:14}}>
+        <div style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-accent)',letterSpacing:'0.2em'}}>02 — RITUAL</div>
+        <div className="txt-line h1"/><div className="txt-line h1" style={{width:'70%'}}/>
+        {['i.','ii.','iii.','iv.','v.'].map((r,i)=>(
+          <div key={r} style={{background:'var(--w-bg-2)',padding:14,border:'1px solid var(--w-rule-strong)',display:'grid',gridTemplateColumns:'30px 1fr',gap:12,alignItems:'center'}}>
+            <span style={{fontFamily:'var(--w-mono)',fontSize:20,color:'var(--w-accent)',fontStyle:'italic'}}>{r}</span>
+            <div><div className="txt-line short" style={{width:'90%'}}/><div className="txt-line short" style={{width:'60%'}}/><div style={{fontFamily:'var(--w-mono)',fontSize:8,color:'var(--w-ink-soft)',marginTop:4}}>+{i*4} MIN</div></div>
+          </div>
+        ))}
+      </div>
+      <div style={{padding:'32px 16px',borderTop:'1px solid var(--w-rule-strong)'}}>
+        <div style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-accent)',letterSpacing:'0.2em'}}>03 — ENCONTRAR-NOS</div>
+        <div className="txt-line h1" style={{marginTop:10}}/>
+        {['Endereço','Horário','Contacto'].map(k=><div key={k} style={{padding:'12px 0',borderBottom:'1px solid var(--w-rule)'}}><div style={{fontFamily:'var(--w-mono)',fontSize:9,color:'var(--w-ink-soft)',letterSpacing:'0.16em',marginBottom:6}}>{k.toUpperCase()}</div><div className="txt-line short"/></div>)}
+        <div className="box cross" style={{background:'var(--w-bg-2)',aspectRatio:1.2,marginTop:18}}><span className="lbl center">MAPA · pin Lisboa</span></div>
+      </div>
+      <div style={{padding:'32px 16px',textAlign:'center',borderTop:'1px solid var(--w-rule-strong)'}}>
+        <div className="txt-line h1"/><div className="txt-line h1" style={{width:'60%',margin:'0 auto 14px'}}/>
+        <div style={{display:'flex',flexDirection:'column',gap:8}}>
+          <span className="btn-w prim" style={{justifyContent:'center'}}>Marcar visita →</span>
+          <span className="btn-w" style={{justifyContent:'center'}}>Compor blend</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============ APP ============
+function App(){
+  return (
+    <DesignCanvas
+      title="Wireframes · O Alquimista"
+      subtitle="Low-fi · 5 páginas × 2 viewports — pronto para handoff Figma"
+    >
+      <DCSection id="landing" title="01 — Landing (Microsite-Tech)">
+        <DCArtboard id="landing-d" label="Desktop · 1440 × 1900" width={1440} height={1900}>
+          <LandingDesktop/>
+        </DCArtboard>
+        <DCArtboard id="landing-m" label="Mobile · 390 × 1500" width={390} height={1500}>
+          <LandingMobile/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="encomendar" title="02 — Marcar Visita (Encomendar)">
+        <DCArtboard id="enc-d" label="Desktop · 1440 × 1400" width={1440} height={1400}>
+          <EncomendarDesktop/>
+        </DCArtboard>
+        <DCArtboard id="enc-m" label="Mobile · 390 × 1700" width={390} height={1700}>
+          <EncomendarMobile/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="biblioteca" title="03 — Biblioteca de Blends">
+        <DCArtboard id="bib-d" label="Desktop · 1440 × 1300" width={1440} height={1300}>
+          <BibliotecaDesktop/>
+        </DCArtboard>
+        <DCArtboard id="bib-m" label="Mobile · 390 × 1500" width={390} height={1500}>
+          <BibliotecaMobile/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="processo" title="04 — O Processo">
+        <DCArtboard id="proc-d" label="Desktop · 1440 × 2400" width={1440} height={2400}>
+          <ProcessoDesktop/>
+        </DCArtboard>
+        <DCArtboard id="proc-m" label="Mobile · 390 × 1900" width={390} height={1900}>
+          <ProcessoMobile/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="experiencia" title="05 — A Experiência">
+        <DCArtboard id="exp-d" label="Desktop · 1440 × 2100" width={1440} height={2100}>
+          <ExperienciaDesktop/>
+        </DCArtboard>
+        <DCArtboard id="exp-m" label="Mobile · 390 × 1900" width={390} height={1900}>
+          <ExperienciaMobile/>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

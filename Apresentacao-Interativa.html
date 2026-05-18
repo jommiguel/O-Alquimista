@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>O Alquimista — Apresentação Interativa</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0a;--gold:#d4a85a;--ink:#e8e6e0;--muted:#888;
+  --gold-dim:rgba(212,168,90,0.15);--gold-glow:rgba(212,168,90,0.4);
+  --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;--serif:'Cormorant Garamond',serif;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans)}
+
+/* SLIDE CONTAINER */
+.deck{position:relative;width:100vw;height:100vh}
+.slide{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:60px 80px 116px;opacity:0;pointer-events:none;transition:opacity .8s ease,transform .8s ease;
+  transform:translateX(60px);overflow:hidden;
+}
+.slide.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.slide.prev{opacity:0;transform:translateX(-60px)}
+
+/* BACKGROUND IMAGE */
+.slide-bg{
+  position:absolute;inset:0;background-size:cover;background-position:center;
+  opacity:0;transition:opacity 1.2s ease .3s;
+}
+.slide.active .slide-bg{opacity:1}
+
+/* ANIMATED ELEMENTS */
+.anim{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .anim{opacity:1;transform:translateY(0)}
+.slide.active .anim.d1{transition-delay:.15s}
+.slide.active .anim.d2{transition-delay:.3s}
+.slide.active .anim.d3{transition-delay:.45s}
+.slide.active .anim.d4{transition-delay:.6s}
+.slide.active .anim.d5{transition-delay:.75s}
+.slide.active .anim.d6{transition-delay:.9s}
+.slide.active .anim.d7{transition-delay:1.05s}
+.slide.active .anim.d8{transition-delay:1.2s}
+
+/* TYPOGRAPHY */
+.t-title{font-family:var(--serif);font-size:clamp(42px,6vw,80px);font-weight:300;line-height:1.1;letter-spacing:-1px}
+.t-subtitle{font-family:var(--sans);font-size:clamp(16px,2vw,22px);font-weight:300;color:var(--muted);margin-top:12px}
+.t-hero{font-family:var(--serif);font-size:clamp(60px,8vw,100px);font-weight:300;letter-spacing:-2px}
+.t-body{font-family:var(--sans);font-size:clamp(13px,1.4vw,16px);font-weight:300;line-height:1.7;color:rgba(232,230,224,0.8)}
+.t-mono{font-family:var(--mono);font-size:clamp(11px,1.2vw,14px);color:var(--gold);letter-spacing:1px}
+.t-stat{font-family:var(--mono);font-size:clamp(36px,5vw,56px);font-weight:500;color:var(--gold)}
+.t-label{font-family:var(--sans);font-size:13px;font-weight:400;color:var(--muted);text-transform:uppercase;letter-spacing:2px}
+.t-section{font-family:var(--mono);font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:3px;margin-bottom:20px}
+.t-accent{color:var(--gold)}
+.t-italic{font-family:var(--serif);font-style:italic;font-weight:300}
+
+/* LAYOUT */
+.flex{display:flex;gap:40px}.flex-col{flex-direction:column}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:30px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.center{text-align:center;align-items:center;justify-content:center}
+.mt-sm{margin-top:12px}.mt-md{margin-top:28px}.mt-lg{margin-top:48px}
+
+/* CARDS */
+.card{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;padding:24px;transition:transform .3s,border-color .3s,background .3s;
+}
+.card:hover{transform:translateY(-4px);border-color:var(--gold-dim);background:rgba(255,255,255,0.05)}
+.card-gold{border-color:var(--gold-dim);background:var(--gold-dim)}
+.card h3{font-family:var(--sans);font-size:18px;font-weight:500;margin-bottom:10px}
+.card p{font-size:14px;color:rgba(232,230,224,0.65);line-height:1.6}
+
+/* STAT ROW */
+.stat-row{display:flex;align-items:baseline;gap:24px;padding:18px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.stat-row:last-child{border-bottom:none}
+
+/* COMPETITOR */
+.competitor{padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.competitor h4{font-size:16px;font-weight:500;margin-bottom:4px}
+.competitor p{font-size:13px;color:var(--muted)}
+
+/* IMG */
+.img-panel{border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.03)}
+.img-panel img{width:100%;height:100%;object-fit:cover;display:block}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block}
+.divider{width:60px;height:1px;background:var(--gold);margin:20px 0}
+.tag{display:inline-block;padding:4px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:20px;font-size:11px;font-family:var(--mono);color:var(--muted);margin:3px;transition:border-color .3s,color .3s}
+.tag:hover{border-color:var(--gold);color:var(--gold)}
+
+/* STEP */
+.step{display:flex;gap:20px;align-items:flex-start}
+.step-num{font-family:var(--mono);font-size:28px;color:var(--gold);min-width:48px;font-weight:500}
+
+/* ============================================
+   DEVICE MOCKUPS — THE STAR FEATURE
+   ============================================ */
+
+/* DESKTOP BROWSER MOCKUP */
+.browser-mock{
+  border-radius:12px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);
+  background:#111;
+  box-shadow:0 20px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(255,255,255,0.05);
+  transition:transform .5s ease,box-shadow .5s ease;
+  max-width:100%;
+}
+.browser-mock:hover{transform:scale(1.01);box-shadow:0 24px 100px rgba(212,168,90,0.1),0 0 0 1px rgba(212,168,90,0.2)}
+.browser-chrome{
+  height:36px;background:#1a1a1a;display:flex;align-items:center;padding:0 14px;gap:8px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.browser-dot{width:10px;height:10px;border-radius:50%}
+.browser-dot.r{background:#ff5f57}.browser-dot.y{background:#febc2e}.browser-dot.g{background:#28c840}
+.browser-url{
+  flex:1;margin-left:12px;background:rgba(255,255,255,0.05);border-radius:6px;
+  padding:4px 12px;font-family:var(--mono);font-size:10px;color:var(--muted);
+  display:flex;align-items:center;gap:6px;
+}
+.browser-url .lock{color:var(--gold);font-size:9px}
+.browser-body{position:relative;background:#0a0a0a}
+.browser-body iframe{width:100%;border:none;display:block;background:#0a0a0a}
+
+/* IPHONE MOCKUP */
+.iphone-mock{
+  width:280px;border-radius:40px;overflow:hidden;
+  border:3px solid #2a2a2a;background:#111;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6),inset 0 0 0 2px #1a1a1a;
+  position:relative;flex-shrink:0;
+  transition:transform .5s ease;
+}
+.iphone-mock:hover{transform:scale(1.02)}
+.iphone-notch{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:120px;height:28px;background:#111;border-radius:0 0 18px 18px;z-index:10;
+}
+.iphone-notch::after{
+  content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  width:50px;height:5px;border-radius:3px;background:#222;
+}
+.iphone-status{
+  height:44px;background:#0a0a0a;display:flex;align-items:flex-end;justify-content:center;
+  padding-bottom:4px;font-family:var(--mono);font-size:9px;color:var(--muted);
+}
+.iphone-body{position:relative;background:#0a0a0a}
+.iphone-body iframe{width:100%;border:none;display:block;background:#0a0a0a}
+.iphone-home{
+  height:28px;background:#0a0a0a;display:flex;align-items:center;justify-content:center;
+}
+.iphone-home::after{
+  content:'';width:100px;height:4px;border-radius:2px;background:rgba(255,255,255,0.15);
+}
+
+/* LIVE DEMO BUTTON */
+.btn-live{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 28px;border-radius:8px;
+  background:linear-gradient(135deg,rgba(212,168,90,0.15),rgba(212,168,90,0.05));
+  border:1px solid var(--gold);color:var(--gold);
+  font-family:var(--mono);font-size:13px;letter-spacing:1px;
+  text-decoration:none;cursor:pointer;
+  transition:all .3s ease;position:relative;overflow:hidden;
+}
+.btn-live:hover{
+  background:linear-gradient(135deg,rgba(212,168,90,0.3),rgba(212,168,90,0.1));
+  transform:translateY(-2px);box-shadow:0 8px 32px rgba(212,168,90,0.2);
+}
+.btn-live::before{
+  content:'';position:absolute;top:50%;left:50%;width:0;height:0;
+  background:rgba(212,168,90,0.1);border-radius:50%;
+  transform:translate(-50%,-50%);transition:width .5s,height .5s;
+}
+.btn-live:hover::before{width:300px;height:300px}
+.btn-live .pulse-dot{
+  width:8px;height:8px;border-radius:50%;background:#28c840;
+  animation:pulse-live 1.5s ease-in-out infinite;
+}
+@keyframes pulse-live{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(40,200,64,0.4)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(40,200,64,0)}}
+
+/* PAGE TABS for switching between site pages */
+.page-tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.page-tab{
+  padding:6px 16px;border-radius:6px;
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  cursor:pointer;transition:all .3s;
+}
+.page-tab:hover{border-color:rgba(212,168,90,0.3);color:var(--ink)}
+.page-tab.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+
+/* MOODBOARD GRID (legacy, kept for compat) */
+.mood-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:12px;height:70vh}
+.mood-grid .img-panel{min-height:0}
+
+/* NAVIGATION */
+.nav-bar{
+  position:fixed;bottom:0;left:0;right:0;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;z-index:100;
+  background:linear-gradient(transparent,rgba(10,10,10,0.95));
+}
+.nav-btn{
+  background:none;border:1px solid rgba(255,255,255,0.1);color:var(--ink);
+  padding:8px 20px;border-radius:6px;font-family:var(--mono);font-size:12px;
+  cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:8px;
+}
+.nav-btn:hover{border-color:var(--gold);color:var(--gold)}
+.nav-btn:disabled{opacity:0.2;cursor:default}
+.nav-center{display:flex;align-items:center;gap:12px}
+.slide-counter{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.progress{position:fixed;top:0;left:0;height:2px;background:var(--gold);z-index:101;transition:width .5s ease}
+.slide-dots{display:flex;gap:6px}
+.slide-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.1);cursor:pointer;transition:all .3s}
+.slide-dot.active{background:var(--gold);transform:scale(1.3)}
+.slide-dot:hover{background:rgba(255,255,255,0.3)}
+
+/* CORNER */
+.corner{position:fixed;top:24px;right:24px;z-index:100;display:flex;flex-direction:column;align-items:flex-end}
+.corner-dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.corner-line-h{width:28px;height:1px;background:rgba(255,255,255,0.2);margin-top:8px}
+.corner-line-v{width:1px;height:24px;background:rgba(255,255,255,0.2);align-self:flex-end;margin-top:-1px}
+
+.slide-footer{position:absolute;bottom:20px;left:80px;font-family:var(--mono);font-size:10px;color:rgba(255,255,255,0.2)}
+.cover-ellipse{position:absolute;width:55vw;height:55vw;max-width:700px;max-height:700px;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);overflow:hidden;opacity:0;transition:opacity 1.5s ease .2s}
+.slide.active .cover-ellipse{opacity:1}
+.cover-ellipse img{width:100%;height:100%;object-fit:cover;opacity:0.4}
+.persona-photo{width:320px;height:440px;border-radius:12px;overflow:hidden;flex-shrink:0;opacity:0;transform:scale(0.95);transition:opacity .8s ease .4s,transform .8s ease .4s}
+.slide.active .persona-photo{opacity:1;transform:scale(1)}
+.persona-photo img{width:100%;height:100%;object-fit:cover}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+
+/* FULLSCREEN DEMO OVERLAY */
+.demo-overlay{
+  position:fixed;inset:0;z-index:200;background:var(--bg);
+  display:none;flex-direction:column;
+  opacity:0;transition:opacity .5s ease;
+}
+.demo-overlay.open{display:flex}
+.demo-toolbar{
+  height:48px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;background:#111;border-bottom:1px solid rgba(255,255,255,0.06);
+  flex-shrink:0;
+}
+.demo-toolbar .page-tabs{margin:0}
+.demo-close{
+  background:none;border:1px solid rgba(255,255,255,0.1);color:var(--ink);
+  padding:6px 16px;border-radius:6px;font-family:var(--mono);font-size:11px;
+  cursor:pointer;transition:all .3s;
+}
+.demo-close:hover{border-color:#ff5555;color:#ff5555}
+.demo-frame{flex:1;position:relative}
+.demo-frame iframe{width:100%;height:100%;border:none;background:var(--bg)}
+.demo-device-toggle{
+  display:flex;gap:4px;
+}
+.demo-device-btn{
+  padding:6px 12px;border-radius:6px;background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);color:var(--muted);
+  font-size:16px;cursor:pointer;transition:all .3s;
+}
+.demo-device-btn.active{background:var(--gold-dim);border-color:var(--gold);color:var(--gold)}
+.demo-device-btn:hover{border-color:rgba(212,168,90,0.3)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .slide{padding:32px 40px 88px}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .flex{flex-direction:column;gap:24px}
+  .mood-grid{grid-template-columns:1fr 1fr;height:auto}
+  .persona-photo{width:100%;height:300px}
+  .iphone-mock{width:220px}
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="corner"><div class="corner-dot"></div><div class="corner-line-h"></div><div class="corner-line-v"></div></div>
+
+<!-- ====== FULLSCREEN DEMO OVERLAY ====== -->
+<div class="demo-overlay" id="demoOverlay">
+  <div class="demo-toolbar">
+    <div style="display:flex;align-items:center;gap:16px">
+      <span class="t-mono" style="font-size:11px;color:var(--gold)">DEMO LIVE</span>
+      <div class="page-tabs" id="demoTabs">
+        <div class="page-tab active" onclick="demoNav('Microsite-Tech.html',this)">Landing</div>
+        <div class="page-tab" onclick="demoNav('Processo.html',this)">Processo</div>
+        <div class="page-tab" onclick="demoNav('Biblioteca.html',this)">Biblioteca</div>
+        <div class="page-tab" onclick="demoNav('Experiencia.html',this)">Experiência</div>
+        <div class="page-tab" onclick="demoNav('Encomendar.html',this)">Encomendar</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="demo-device-toggle">
+        <button class="demo-device-btn active" onclick="demoDevice('100%',this)" title="Desktop">🖥</button>
+        <button class="demo-device-btn" onclick="demoDevice('768px',this)" title="Tablet">📱</button>
+        <button class="demo-device-btn" onclick="demoDevice('375px',this)" title="Mobile">📲</button>
+      </div>
+      <button class="demo-close" onclick="closeDemo()">ESC · Voltar</button>
+    </div>
+  </div>
+  <div class="demo-frame">
+    <iframe id="demoIframe" src="about:blank"></iframe>
+  </div>
+</div>
+
+<div class="deck" id="deck">
+
+<!-- SLIDE 01: COVER -->
+<div class="slide active" data-slide="0">
+  <div class="cover-ellipse"><img src="presentation-assets/01_cover_-_alquimista.jpg" alt="Cover"></div>
+  <div style="position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center">
+    <div class="dot anim pulse"></div>
+    <h1 class="t-hero anim d1" style="margin-top:20px">O Alquimista</h1>
+    <p class="t-subtitle anim d2 t-italic" style="max-width:600px">Cada chávena tem uma fórmula. Cada fórmula tem o seu nome.</p>
+    <div class="anim d4 mt-lg" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:center">
+      <span class="t-mono" style="font-size:10px;opacity:.4">← → NAVEGAR · F FULLSCREEN</span>
+      <a class="btn-live" onclick="openDemo('Microsite-Tech.html')"><span class="pulse-dot"></span>VER SITE LIVE</a>
+    </div>
+  </div>
+  <div class="slide-footer">Design Web 4.0 / João Miguel Martins / Turma B</div>
+</div>
+
+<!-- SLIDE 02: PROBLEMA -->
+<div class="slide" data-slide="1">
+  <div class="slide-bg" style="background-image:url(presentation-assets/02_problema_-_alquimista.jpg);opacity:0.15"></div>
+  <div style="position:relative;z-index:1;max-width:900px">
+    <p class="t-section anim">02</p>
+    <h2 class="t-title anim d1">Problema<span class="t-accent t-italic"> ?</span></h2>
+    <p class="anim d2 mt-md" style="font-size:clamp(22px,3.5vw,38px);font-weight:300;line-height:1.4">
+      O café de especialidade cresce, mas a experiência continua a ser sempre igual. <span class="t-accent">Alguém escolhe por ti. Tu só bebes.</span>
+    </p>
+    <div class="card card-gold anim d3 mt-lg" style="max-width:600px">
+      <p class="t-mono" style="font-size:13px">Vamos conhecer quem quer mais do café →</p>
+    </div>
+  </div>
+  <div class="slide-footer">Design Web 4.0 / João Miguel Martins / Turma B</div>
+</div>
+
+<!-- SLIDE 03: EMPATIA -->
+<div class="slide" data-slide="2">
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">03</p>
+    <h2 class="t-title anim d1">Empatia</h2>
+    <div class="grid-4 mt-md" style="margin-top:24px">
+      <div class="card anim d2">
+        <div class="t-mono" style="margin-bottom:12px">◉ Utilizadores</div>
+        <p class="t-body">Amantes de café entre 25 e 45 anos que procuram uma experiência de consumo mais consciente, personalizada e com significado.</p>
+        <div class="img-panel mt-sm" style="height:100px;margin-top:12px"><img src="presentation-assets/03_empatia_-_alquimista.jpg" alt=""></div>
+      </div>
+      <div class="card anim d3">
+        <div class="t-mono" style="margin-bottom:12px">◈ O que sentem</div>
+        <p class="t-body">Frustração com a uniformidade do café comercial. Curiosidade sobre origens e processos. Vontade de participar na criação do seu blend.</p>
+        <div class="img-panel mt-sm" style="height:100px;margin-top:12px"><img src="presentation-assets/03_empatia_pt_-_alquimista.jpg" alt=""></div>
+      </div>
+      <div class="card anim d4">
+        <div class="t-mono" style="margin-bottom:12px">◇ Problema</div>
+        <p class="t-body">O consumidor não faz parte do processo. O café chega pronto, decidido por outros, sem história pessoal e sem ligação ao que está a beber.</p>
+      </div>
+      <div class="card anim d5">
+        <div class="t-mono" style="margin-bottom:12px">◆ Desafio</div>
+        <p class="t-body">Devolver às pessoas o papel principal na experiência do café. Deixar que participem, que escolham, que sintam que aquele café é mesmo delas.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 04: ANÁLISE DE MERCADO -->
+<div class="slide" data-slide="3">
+  <div class="slide-bg" style="background-image:url(presentation-assets/04_análise_de_mercado_-_alquimista.jpg);opacity:0.12"></div>
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">04</p>
+    <h2 class="t-title anim d1">Análise de Mercado</h2>
+    <div style="margin-top:28px">
+      <div class="stat-row anim d2"><span class="t-stat">€5,4 MM</span><span class="t-body">Mercado global de café de especialidade em 2025 (mil milhões €)</span></div>
+      <div class="stat-row anim d3"><span class="t-stat">+12%</span><span class="t-body">Crescimento anual do segmento de especialidade em Portugal</span></div>
+      <div class="stat-row anim d4"><span class="t-stat">73%</span><span class="t-body">Dos consumidores querem saber a origem do café</span></div>
+      <div class="stat-row anim d5"><span class="t-stat">58%</span><span class="t-body">Pagariam mais por uma experiência personalizada</span></div>
+    </div>
+    <div class="card card-gold anim d6 mt-md" style="max-width:700px;margin-top:32px">
+      <p class="t-mono" style="font-size:12px">O consumidor de café está a evoluir de passivo para participante. O Alquimista posiciona-se nesta oportunidade.</p>
+    </div>
+    <p class="t-mono anim d7" style="font-size:9px;opacity:0.35;margin-top:16px">Fontes: Statista — Specialty Coffee Market 2025 · SCA Research · NCA National Coffee Data Trends 2024 · Euromonitor Portugal</p>
+  </div>
+</div>
+
+<!-- SLIDE 05: ANÁLISE CONCORRÊNCIA -->
+<div class="slide" data-slide="4">
+  <div class="slide-bg" style="background-image:url(presentation-assets/05_análise_concorrencial_-_alquimista.jpg);opacity:0.1"></div>
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">05</p>
+    <h2 class="t-title anim d1">Análise Concorrência</h2>
+    <div class="grid-2 mt-md" style="margin-top:40px">
+      <div>
+        <p class="t-label anim d2">Indireta</p>
+        <div class="competitor anim d3"><h4>Starbucks Reserve</h4><p>Experiência premium, mas sem personalização real do blend.</p></div>
+        <div class="competitor anim d4"><h4>Blue Bottle</h4><p>Torrefação artesanal de qualidade, sem criação conjunta com o cliente.</p></div>
+        <div class="competitor anim d5"><h4>Nespresso</h4><p>Cápsulas premium, mas produto fechado e industrial.</p></div>
+      </div>
+      <div>
+        <p class="t-label anim d2">Direta</p>
+        <div class="competitor anim d3"><h4>Copenhagen Coffee Lab</h4><p>Torrefação própria, mas sem composição personalizada.</p></div>
+        <div class="competitor anim d4"><h4>The Coffee Collective</h4><p>Transparência na origem, mas experiência passiva.</p></div>
+        <div class="competitor anim d5"><h4>Fábrica Coffee</h4><p>Especialidade local, mas sem método de criação conjunta.</p></div>
+      </div>
+    </div>
+    <div class="card card-gold anim d6 mt-md" style="max-width:500px;margin-top:24px">
+      <p class="t-mono" style="font-size:12px">Nenhum concorrente permite ao cliente compor o seu blend com método e acompanhamento presencial.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 06: PÚBLICO-ALVO -->
+<div class="slide" data-slide="5">
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">06</p>
+    <h2 class="t-title anim d1">Público-alvo</h2>
+    <p class="t-body anim d2 mt-md" style="max-width:800px">O Alquimista dirige-se a consumidores de café que procuram mais do que uma bebida. Procuram uma experiência sensorial, um ritual com significado.</p>
+    <div class="flex mt-md" style="margin-top:40px;align-items:flex-start">
+      <div style="flex:1">
+        <div class="anim d3" style="display:flex;align-items:center;gap:12px;padding:12px 0"><span class="dot"></span><span class="t-body">Adultos entre 25 e 45 anos com interesse em gastronomia e experiências premium</span></div>
+        <div class="anim d4" style="display:flex;align-items:center;gap:12px;padding:12px 0"><span class="dot"></span><span class="t-body">Consumidores de café de especialidade que querem ir além da compra passiva</span></div>
+        <div class="anim d5" style="display:flex;align-items:center;gap:12px;padding:12px 0"><span class="dot"></span><span class="t-body">Profissionais criativos e curiosos que valorizam processos artesanais</span></div>
+        <div class="anim d6" style="display:flex;align-items:center;gap:12px;padding:12px 0"><span class="dot"></span><span class="t-body">Residentes e visitantes de Lisboa que procuram experiências locais autênticas</span></div>
+      </div>
+      <div style="display:flex;gap:16px;flex-shrink:0">
+        <div class="img-panel anim d4" style="width:200px;height:280px"><img src="presentation-assets/06_publico_alvo_-_alquimista.jpg" alt=""></div>
+        <div class="img-panel anim d5" style="width:200px;height:280px"><img src="presentation-assets/06_publico_alvo_male_-_alquimista.jpg" alt=""></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 07: PERSONA -->
+<div class="slide" data-slide="6">
+  <div style="position:relative;z-index:1;width:100%;display:flex;gap:48px;align-items:flex-start">
+    <div style="flex:1">
+      <p class="t-section anim">07</p>
+      <h2 class="t-title anim d1">Persona</h2>
+      <div class="anim d2 mt-md" style="margin-top:28px">
+        <h3 style="font-size:22px;font-weight:500">Mariana Costa</h3>
+        <p class="t-mono mt-sm" style="margin-top:8px">Idade: 32 · Profissão: Arquitecta</p>
+      </div>
+      <div class="grid-2 mt-md anim d3" style="margin-top:32px;gap:28px">
+        <div><p class="t-label" style="margin-bottom:10px">Necessidades</p><p class="t-body">· Descobrir cafés que reflictam o seu gosto pessoal<br>· Uma experiência guiada, não intimidante<br>· Aprender sobre origens sem termos técnicos</p></div>
+        <div><p class="t-label" style="margin-bottom:10px">Frustrações</p><p class="t-body">· O café de especialidade parece elitista<br>· Não sabe distinguir origens nem métodos<br>· Sente que o seu paladar não é respeitado</p></div>
+      </div>
+      <div class="anim d4 mt-md" style="margin-top:28px">
+        <p class="t-label" style="margin-bottom:10px">Contexto</p>
+        <p class="t-body">Descobriu o café de especialidade através de uma amiga. Valoriza processos artesanais e experiências com significado.</p>
+      </div>
+    </div>
+    <div class="persona-photo"><img src="presentation-assets/07_persona_-_alquimista.jpg" alt="Mariana"></div>
+  </div>
+</div>
+
+<!-- SLIDE 08: DEFINIÇÃO -->
+<div class="slide" data-slide="7">
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">08</p>
+    <h2 class="t-title anim d1">Definição</h2>
+    <div class="grid-3 mt-lg" style="margin-top:48px">
+      <div class="card anim d2"><h3 class="t-accent">Problema</h3><p>As pessoas querem sentir que o café é delas, mas a experiência não lhes dá espaço para isso. Falta envolvimento, falta personalização, falta significado.</p></div>
+      <div class="card anim d3"><h3 class="t-accent">Porquê resolver?</h3><p>Porque as pessoas querem saber o que bebem e fazer parte do processo. Quando alguém participa na criação, a experiência ganha outro valor.</p></div>
+      <div class="card anim d4"><h3 class="t-accent">Objetivo</h3><p>Criar um espaço onde cada pessoa possa compor o seu próprio café, passo a passo, com acompanhamento e total transparência sobre o que está a escolher.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 09: HOW MIGHT WE -->
+<div class="slide center" data-slide="8">
+  <div class="slide-bg" style="background-image:url(presentation-assets/09_how_might_we_-_alquimista.jpg);opacity:0.12"></div>
+  <div style="position:relative;z-index:1;text-align:center;max-width:900px;margin:0 auto">
+    <p class="t-section anim">09</p>
+    <h2 class="t-title anim d1" style="font-size:clamp(36px,5vw,64px)">How might we<span class="t-accent"> ...</span></h2>
+    <p class="anim d2 mt-lg t-italic" style="font-size:clamp(18px,2.5vw,24px);margin-top:40px;line-height:1.5">Como é que podemos transformar o ato de beber café numa experiência de criação conjunta com método e significado?</p>
+    <div class="anim d3 mt-md t-accent" style="font-size:28px;margin-top:24px">↓</div>
+    <p class="anim d4 t-body mt-md" style="max-width:700px;margin:20px auto 0">Criamos um laboratório presencial e digital onde o utilizador compõe o seu blend escolha a escolha, com transparência na origem, método na torra e ritual na preparação.</p>
+  </div>
+</div>
+
+<!-- SLIDE 10: IDEAÇÃO -->
+<div class="slide" data-slide="9">
+  <div class="slide-bg" style="background-image:url(presentation-assets/10_ideação_-_alquimista.jpg);opacity:0.1"></div>
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">10</p>
+    <h2 class="t-title anim d1">Ideação</h2>
+    <div class="grid-2 mt-lg" style="margin-top:48px">
+      <div class="card anim d2" style="border-color:rgba(255,80,80,0.15)">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><span style="color:#ff5555;font-size:24px">✕</span><h3 style="color:#ff5555">Más Ideias</h3></div>
+        <p>· E-commerce genérico de café online<br>· App de subscrição mensal sem personalização<br>· Máquina automática que escolhe pelo utilizador<br>· Copiar o modelo Nespresso com cápsulas artesanais</p>
+      </div>
+      <div class="card card-gold anim d3">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><span style="color:var(--gold);font-size:24px">◆</span><h3 class="t-accent">Boas Ideias</h3></div>
+        <p>· Blend builder interativo com feedback visual em tempo real<br>· Experiência presencial guiada por um torrador<br>· Sistema de fórmulas único por cliente<br>· Biblioteca de blends da comunidade para descoberta</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11: MENSAGEM E TOM -->
+<div class="slide" data-slide="10">
+  <div class="slide-bg" style="background-image:url(presentation-assets/11_mensagem_e_identidade_-_alquimista.jpg);opacity:0.12"></div>
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">11</p>
+    <h2 class="t-title anim d1" style="font-size:clamp(36px,4.5vw,56px)">Mensagem, Tom de Voz<br><span class="t-accent t-italic">e Estilo</span></h2>
+    <div class="grid-3 mt-lg" style="margin-top:48px">
+      <div class="card anim d2"><h3 class="t-accent">Mensagem</h3><p>Cada chávena é um ensaio, cada blend é uma fórmula. Não vendemos café, oferecemos autoria.</p></div>
+      <div class="card anim d3"><h3 class="t-accent">Tom de voz</h3><p>Técnico mas acessível. Preciso mas humano. Trata o cliente como criador, nunca como espectador.</p></div>
+      <div class="card anim d4"><h3 class="t-accent">Estilo visual</h3><p>Dark premium com acentos dourados. Tipografia monospace para dados, serifada para momentos emotivos.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12: MOODBOARD -->
+<div class="slide" data-slide="11" style="padding:40px 40px 96px">
+  <div style="position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px">
+      <h2 class="t-title anim">Moodboard</h2>
+      <p class="t-mono anim d1" style="font-size:10px;opacity:0.4">Atmosfera · Textura · Emoção</p>
+    </div>
+    <div class="anim d1" style="flex:1;display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;grid-template-rows:1.2fr 1fr;gap:10px;height:70vh">
+      <!-- Row 1 -->
+      <div class="img-panel" style="grid-row:span 1"><img src="presentation-assets/12_moodboard_-_imagem_principal.jpg" alt=""></div>
+      <div class="img-panel"><img src="presentation-assets/12_moodboard_-_atmosfera.jpg" alt=""></div>
+      <div class="img-panel"><img src="presentation-assets/12_moodboad_-_material___textura_.jpg" alt=""></div>
+      <!-- Conceito: A Promessa -->
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden">
+        <p class="t-mono" style="font-size:9px;opacity:0.35;margin-bottom:8px">A PROMESSA</p>
+        <div>
+          <p class="t-italic" style="font-size:20px;line-height:1.3;margin-bottom:10px;opacity:0.9">Cada chávena tem <span style="color:var(--gold)">o teu nome</span>.</p>
+          <p style="font-size:11px;line-height:1.5;opacity:0.45">Transparência na origem, método na torra, ritual na preparação. Uma experiência que começa no grão.</p>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:10px;margin-top:10px">
+          <p class="t-mono" style="font-size:8px;opacity:0.3">GRÃO → FÓRMULA → CHÁVENA</p>
+        </div>
+      </div>
+      <!-- Row 2 -->
+      <!-- Conceito: Palavras-chave -->
+      <div style="background:rgba(196,164,105,0.06);border:1px solid rgba(196,164,105,0.12);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;justify-content:center;overflow:hidden">
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="tag" style="border-color:rgba(196,164,105,0.25);color:var(--gold)">RITUAL</span>
+          <span class="tag" style="border-color:rgba(196,164,105,0.25);color:var(--gold)">ORIGEM</span>
+          <span class="tag" style="border-color:rgba(196,164,105,0.25);color:var(--gold)">PRECISÃO</span>
+          <span class="tag" style="border-color:rgba(196,164,105,0.15)">ALQUIMIA</span>
+          <span class="tag" style="border-color:rgba(196,164,105,0.15)">FÓRMULA</span>
+          <span class="tag" style="border-color:rgba(196,164,105,0.15)">LABORATÓRIO</span>
+          <span class="tag" style="border-color:rgba(255,255,255,0.06)">TRANSPARÊNCIA</span>
+          <span class="tag" style="border-color:rgba(255,255,255,0.06)">DESCOBERTA</span>
+        </div>
+      </div>
+      <div class="img-panel" style="grid-column:span 1"><img src="presentation-assets/12_moodboard_-_padrão_e_textura.jpg" alt=""></div>
+      <!-- Conceito: Sensorial -->
+      <div style="background:linear-gradient(160deg,#0a0a0a 0%,#1a1510 60%,rgba(196,164,105,0.15) 100%);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;justify-content:center;overflow:hidden">
+        <p class="t-mono" style="font-size:9px;opacity:0.35;margin-bottom:12px">SENSORIAL</p>
+        <div style="line-height:2">
+          <span class="t-italic" style="font-size:18px;display:block">luz quente</span>
+          <span class="t-italic" style="font-size:18px;display:block;color:var(--gold)">aroma a torra</span>
+          <span class="t-italic" style="font-size:18px;display:block">toque de madeira</span>
+        </div>
+      </div>
+      <!-- Conceito: Dados técnicos + Cor -->
+      <div style="background:var(--bg);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden">
+        <div>
+          <p class="t-mono" style="font-size:9px;opacity:0.35;margin-bottom:8px">PALETA + DADOS</p>
+          <div style="display:flex;gap:5px;margin-bottom:12px">
+            <div style="width:28px;height:28px;border-radius:4px;background:#fafafa"></div>
+            <div style="width:28px;height:28px;border-radius:4px;background:#d4a85a"></div>
+            <div style="width:28px;height:28px;border-radius:4px;background:#6b4c2a"></div>
+            <div style="width:28px;height:28px;border-radius:4px;background:#0a0a0a;border:1px solid rgba(255,255,255,0.15)"></div>
+          </div>
+        </div>
+        <p class="t-mono" style="font-size:9px;line-height:1.8;color:var(--muted)">LAT 9.0282°N<br>DEN 0.84 g/cm³<br>TORRA 220°C · 11:42</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13: WIREFRAMES -->
+<div class="slide" data-slide="12">
+  <div class="slide-bg" style="background-image:url(presentation-assets/13_wireframes_-_alquimista.jpg);opacity:0.10"></div>
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">13</p>
+    <h2 class="t-title anim d1">Wireframes</h2>
+    <p class="t-body anim d2" style="margin-top:8px;margin-bottom:24px;opacity:0.7">Estrutura e hierarquia de conteúdo · Baixa fidelidade</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px" class="anim d3">
+      <!-- WF 1: Landing Page -->
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:16px;overflow:hidden">
+        <p class="t-mono" style="font-size:9px;margin-bottom:12px;opacity:0.5">LANDING PAGE</p>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:10px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:12px"><div style="width:60px;height:6px;background:rgba(255,255,255,0.15);border-radius:2px"></div><div style="display:flex;gap:6px"><div style="width:28px;height:5px;background:rgba(255,255,255,0.08);border-radius:2px"></div><div style="width:28px;height:5px;background:rgba(255,255,255,0.08);border-radius:2px"></div><div style="width:28px;height:5px;background:rgba(255,255,255,0.08);border-radius:2px"></div></div></div>
+          <div style="height:50px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.08);border-radius:3px;display:flex;align-items:center;justify-content:center;margin-bottom:8px"><span style="font-size:8px;opacity:0.3">HERO</span></div>
+          <div style="display:flex;gap:6px;margin-bottom:6px"><div style="flex:1;height:30px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px"></div><div style="flex:1;height:30px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px"></div><div style="flex:1;height:30px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px"></div></div>
+          <div style="height:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:3px"></div>
+        </div>
+        <p style="font-size:10px;opacity:0.5;line-height:1.4">Hero, navegação, secções de processo e biblioteca de origens.</p>
+      </div>
+      <!-- WF 2: Blend Builder -->
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:16px;overflow:hidden">
+        <p class="t-mono" style="font-size:9px;margin-bottom:12px;opacity:0.5">BLEND BUILDER</p>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:10px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px"><div style="width:60px;height:6px;background:rgba(255,255,255,0.15);border-radius:2px"></div><div style="width:40px;height:5px;background:rgba(255,255,255,0.08);border-radius:2px"></div></div>
+          <div style="display:flex;gap:6px;margin-bottom:8px"><div style="width:16px;height:16px;border-radius:50%;background:rgba(196,164,105,0.3)"></div><div style="width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,0.1)"></div><div style="width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,0.1)"></div><div style="width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,0.1)"></div></div>
+          <div style="height:40px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.08);border-radius:3px;display:flex;align-items:center;justify-content:center;margin-bottom:6px"><span style="font-size:7px;opacity:0.3">SELETOR</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px"><div style="height:22px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px"></div><div style="height:22px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px"></div><div style="height:22px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px"></div><div style="height:22px;background:rgba(196,164,105,0.15);border:1px solid rgba(196,164,105,0.3);border-radius:3px"></div></div>
+        </div>
+        <p style="font-size:10px;opacity:0.5;line-height:1.4">Passos de escolha: origem, torra, aroma e topping com pré-visualização.</p>
+      </div>
+      <!-- WF 3: Experiência -->
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:16px;overflow:hidden">
+        <p class="t-mono" style="font-size:9px;margin-bottom:12px;opacity:0.5">EXPERIÊNCIA</p>
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:10px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:10px"><div style="width:60px;height:6px;background:rgba(255,255,255,0.15);border-radius:2px"></div><div style="display:flex;gap:6px"><div style="width:28px;height:5px;background:rgba(255,255,255,0.08);border-radius:2px"></div><div style="width:28px;height:5px;background:rgba(255,255,255,0.08);border-radius:2px"></div></div></div>
+          <div style="height:35px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.08);border-radius:3px;display:flex;align-items:center;justify-content:center;margin-bottom:6px"><span style="font-size:7px;opacity:0.3">GALERIA</span></div>
+          <div style="display:flex;gap:4px;margin-bottom:6px"><div style="flex:1;height:16px;background:rgba(196,164,105,0.15);border-radius:3px"></div><div style="flex:2;height:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px"></div></div>
+          <div style="height:28px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px;margin-bottom:6px"></div>
+          <div style="width:70px;height:18px;background:rgba(196,164,105,0.2);border-radius:3px;display:flex;align-items:center;justify-content:center"><span style="font-size:7px;opacity:0.5">RESERVAR</span></div>
+        </div>
+        <p style="font-size:10px;opacity:0.5;line-height:1.4">Laboratório presencial, galeria e sistema de reservas com calendário.</p>
+      </div>
+    </div>
+    <!-- Row 2: Processo + Checkout -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px" class="anim d4">
+      <!-- WF 4: Processo -->
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:16px;overflow:hidden">
+        <p class="t-mono" style="font-size:9px;margin-bottom:12px;opacity:0.5">PROCESSO</p>
+        <div style="display:flex;gap:12px;align-items:stretch">
+          <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:8px">
+            <div style="display:flex;gap:4px;margin-bottom:6px"><div style="width:8px;height:8px;border-radius:50%;background:rgba(196,164,105,0.3)"></div><div style="flex:1;height:5px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:2px"></div></div>
+            <div style="height:24px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.06);border-radius:3px;margin-bottom:4px"></div>
+            <div style="width:80%;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:3px"></div>
+            <div style="width:60%;height:4px;background:rgba(255,255,255,0.04);border-radius:2px"></div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:8px">
+            <div style="display:flex;gap:4px;margin-bottom:6px"><div style="width:8px;height:8px;border-radius:50%;background:rgba(196,164,105,0.3)"></div><div style="flex:1;height:5px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:2px"></div></div>
+            <div style="height:24px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.06);border-radius:3px;margin-bottom:4px"></div>
+            <div style="width:80%;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:3px"></div>
+            <div style="width:60%;height:4px;background:rgba(255,255,255,0.04);border-radius:2px"></div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:8px">
+            <div style="display:flex;gap:4px;margin-bottom:6px"><div style="width:8px;height:8px;border-radius:50%;background:rgba(196,164,105,0.3)"></div><div style="flex:1;height:5px;background:rgba(255,255,255,0.1);border-radius:2px;margin-top:2px"></div></div>
+            <div style="height:24px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.06);border-radius:3px;margin-bottom:4px"></div>
+            <div style="width:80%;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin-bottom:3px"></div>
+            <div style="width:60%;height:4px;background:rgba(255,255,255,0.04);border-radius:2px"></div>
+          </div>
+        </div>
+        <p style="font-size:10px;opacity:0.5;line-height:1.4;margin-top:8px">Timeline de 4 fases: escolha, torra, preparação e entrega.</p>
+      </div>
+      <!-- WF 5: Checkout / Resumo -->
+      <div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:16px;overflow:hidden">
+        <p class="t-mono" style="font-size:9px;margin-bottom:12px;opacity:0.5">CHECKOUT / RESUMO</p>
+        <div style="display:flex;gap:12px;align-items:stretch">
+          <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:8px">
+            <div style="width:70%;height:5px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:6px"></div>
+            <div style="height:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px;margin-bottom:4px"></div>
+            <div style="height:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px;margin-bottom:4px"></div>
+            <div style="height:20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:3px"></div>
+          </div>
+          <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:4px;padding:8px;display:flex;flex-direction:column;justify-content:space-between">
+            <div><div style="width:50%;height:5px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:6px"></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="width:40%;height:4px;background:rgba(255,255,255,0.06);border-radius:2px"></div><div style="width:20%;height:4px;background:rgba(255,255,255,0.06);border-radius:2px"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px"><div style="width:35%;height:4px;background:rgba(255,255,255,0.06);border-radius:2px"></div><div style="width:15%;height:4px;background:rgba(255,255,255,0.06);border-radius:2px"></div></div>
+            <div style="border-top:1px solid rgba(255,255,255,0.06);margin-top:4px;padding-top:4px;display:flex;justify-content:space-between"><div style="width:30%;height:5px;background:rgba(196,164,105,0.3);border-radius:2px"></div><div style="width:25%;height:5px;background:rgba(196,164,105,0.3);border-radius:2px"></div></div></div>
+            <div style="width:100%;height:20px;background:rgba(196,164,105,0.2);border-radius:3px;display:flex;align-items:center;justify-content:center;margin-top:6px"><span style="font-size:7px;opacity:0.5">CONFIRMAR</span></div>
+          </div>
+        </div>
+        <p style="font-size:10px;opacity:0.5;line-height:1.4;margin-top:8px">Formulário de dados, resumo do blend e confirmação de encomenda.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 14: STYLE GUIDE -->
+<div class="slide" data-slide="13">
+  <div class="slide-bg" style="background-image:url(presentation-assets/14_style_guide.jpg);opacity:0.08"></div>
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">14</p>
+    <h2 class="t-title anim d1">Style Guide</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;margin-top:28px">
+      <!-- COL 1: Tipografia -->
+      <div class="anim d2">
+        <p class="t-label" style="margin-bottom:16px">Tipografia</p>
+        <div style="margin-bottom:16px">
+          <p style="font-family:var(--serif);font-size:32px;font-weight:300;margin-bottom:2px">Cormorant Garamond</p>
+          <p class="t-mono" style="font-size:9px;color:var(--muted)">Títulos · Emotivo · 300/400</p>
+        </div>
+        <div style="margin-bottom:16px">
+          <p style="font-family:var(--sans);font-size:22px;font-weight:300;margin-bottom:2px">Inter Light</p>
+          <p class="t-mono" style="font-size:9px;color:var(--muted)">Subtítulos · 300</p>
+        </div>
+        <div style="margin-bottom:16px">
+          <p style="font-family:var(--sans);font-size:16px;margin-bottom:2px">Inter Regular</p>
+          <p class="t-mono" style="font-size:9px;color:var(--muted)">Corpo de texto · 400</p>
+        </div>
+        <div>
+          <p class="t-mono" style="font-size:14px;margin-bottom:2px">JetBrains Mono</p>
+          <p class="t-mono" style="font-size:9px;color:var(--muted)">Dados · Etiquetas · 400/500</p>
+        </div>
+      </div>
+      <!-- COL 2: Paleta de Cores -->
+      <div class="anim d3">
+        <p class="t-label" style="margin-bottom:16px">Paleta de Cores</p>
+
+        <!-- NEUTRAL -->
+        <div style="margin-bottom:14px">
+          <p class="t-mono" style="font-size:9px;margin-bottom:6px;color:var(--muted)">NEUTRAL</p>
+          <div style="display:flex;gap:2px">
+            <div title="50" style="width:18px;height:18px;border-radius:3px;background:#F7F4EE;"></div>
+            <div title="100" style="width:18px;height:18px;border-radius:3px;background:#EBE8E0;"></div>
+            <div title="200" style="width:18px;height:18px;border-radius:3px;background:#D2CEC4;"></div>
+            <div title="300" style="width:18px;height:18px;border-radius:3px;background:#ACA89E;"></div>
+            <div title="400" style="width:18px;height:18px;border-radius:3px;background:#807C74;"></div>
+            <div title="500" style="width:18px;height:18px;border-radius:3px;background:#5A5752;"></div>
+            <div title="600" style="width:18px;height:18px;border-radius:3px;background:#403D38;"></div>
+            <div title="700" style="width:18px;height:18px;border-radius:3px;background:#2A2824;"></div>
+            <div title="800" style="width:18px;height:18px;border-radius:3px;background:#1A1916;"></div>
+            <div title="900" style="width:18px;height:18px;border-radius:3px;background:#0E0D0C; border:1px solid rgba(255,255,255,0.08)"></div>
+            <div title="950" style="width:18px;height:18px;border-radius:3px;background:#080706; border:1px solid rgba(255,255,255,0.08)"></div>
+          </div>
+          <div style="display:flex;gap:2px;margin-top:3px">
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">50</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">100</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">200</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">300</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">400</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">500</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">600</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">700</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">800</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">900</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">950</span>
+          </div>
+        </div>
+
+        <!-- GOLD -->
+        <div style="margin-bottom:14px">
+          <p class="t-mono" style="font-size:9px;margin-bottom:6px;color:var(--muted)">GOLD</p>
+          <div style="display:flex;gap:2px">
+            <div title="50" style="width:18px;height:18px;border-radius:3px;background:#FCF7EB;"></div>
+            <div title="100" style="width:18px;height:18px;border-radius:3px;background:#F5EAD0;"></div>
+            <div title="200" style="width:18px;height:18px;border-radius:3px;background:#ECD8AC;"></div>
+            <div title="300" style="width:18px;height:18px;border-radius:3px;background:#E1C484;"></div>
+            <div title="400" style="width:18px;height:18px;border-radius:3px;background:#D4A85A;"></div>
+            <div title="500" style="width:18px;height:18px;border-radius:3px;background:#BE923E;"></div>
+            <div title="600" style="width:18px;height:18px;border-radius:3px;background:#A27A2A;"></div>
+            <div title="700" style="width:18px;height:18px;border-radius:3px;background:#82601E;"></div>
+            <div title="800" style="width:18px;height:18px;border-radius:3px;background:#624816;"></div>
+            <div title="900" style="width:18px;height:18px;border-radius:3px;background:#42300E; border:1px solid rgba(255,255,255,0.08)"></div>
+            <div title="950" style="width:18px;height:18px;border-radius:3px;background:#261C08; border:1px solid rgba(255,255,255,0.08)"></div>
+          </div>
+          <div style="display:flex;gap:2px;margin-top:3px">
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">50</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">100</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">200</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">300</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">400</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">500</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">600</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">700</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">800</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">900</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">950</span>
+          </div>
+        </div>
+
+        <!-- COFFEE -->
+        <div style="margin-bottom:14px">
+          <p class="t-mono" style="font-size:9px;margin-bottom:6px;color:var(--muted)">COFFEE</p>
+          <div style="display:flex;gap:2px">
+            <div title="50" style="width:18px;height:18px;border-radius:3px;background:#F4EEE6;"></div>
+            <div title="100" style="width:18px;height:18px;border-radius:3px;background:#E4D6C4;"></div>
+            <div title="200" style="width:18px;height:18px;border-radius:3px;background:#C8AE8C;"></div>
+            <div title="300" style="width:18px;height:18px;border-radius:3px;background:#A87E4E;"></div>
+            <div title="400" style="width:18px;height:18px;border-radius:3px;background:#8C5E34;"></div>
+            <div title="500" style="width:18px;height:18px;border-radius:3px;background:#6E4422;"></div>
+            <div title="600" style="width:18px;height:18px;border-radius:3px;background:#502E14;"></div>
+            <div title="700" style="width:18px;height:18px;border-radius:3px;background:#3A200C;"></div>
+            <div title="800" style="width:18px;height:18px;border-radius:3px;background:#281408;"></div>
+            <div title="900" style="width:18px;height:18px;border-radius:3px;background:#180C04; border:1px solid rgba(255,255,255,0.08)"></div>
+            <div title="950" style="width:18px;height:18px;border-radius:3px;background:#0C0602; border:1px solid rgba(255,255,255,0.08)"></div>
+          </div>
+          <div style="display:flex;gap:2px;margin-top:3px">
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">50</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">100</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">200</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">300</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">400</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">500</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">600</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">700</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">800</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">900</span>
+            <span style="width:18px;font-family:var(--mono);font-size:6px;color:rgba(255,255,255,0.25);text-align:center">950</span>
+          </div>
+        </div>
+
+        <!-- ACCENT -->
+        <div>
+          <p class="t-mono" style="font-size:9px;margin-bottom:6px;color:var(--muted)">ACCENT</p>
+          <div style="display:flex;gap:8px;align-items:center">
+            <div style="width:18px;height:18px;border-radius:50%;background:#D4A85A"></div>
+            <div style="width:18px;height:18px;border-radius:50%;background:#28C840"></div>
+            <div style="width:18px;height:18px;border-radius:50%;background:#FF5F57"></div>
+          </div>
+        </div>
+      </div>
+      <!-- COL 3: Elementos -->
+      <div class="anim d4">
+        <p class="t-label" style="margin-bottom:16px">Elementos</p>
+        <!-- Buttons -->
+        <div style="margin-bottom:14px">
+          <p class="t-mono" style="font-size:9px;margin-bottom:8px;color:var(--muted)">BOTÕES</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span style="padding:6px 16px;border-radius:6px;background:var(--gold);color:#0a0a0a;font-family:var(--mono);font-size:10px">Primário</span>
+            <span style="padding:6px 16px;border-radius:6px;border:1px solid var(--gold);color:var(--gold);font-family:var(--mono);font-size:10px">Secundário</span>
+            <span style="padding:6px 16px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);color:var(--muted);font-family:var(--mono);font-size:10px">Ghost</span>
+          </div>
+        </div>
+        <!-- Dividers -->
+        <div style="margin-bottom:14px">
+          <p class="t-mono" style="font-size:9px;margin-bottom:8px;color:var(--muted)">LINHAS</p>
+          <div style="width:60px;height:1px;background:var(--gold);margin-bottom:6px"></div>
+          <div style="width:100%;height:1px;background:rgba(255,255,255,0.06);margin-bottom:6px"></div>
+          <div style="width:100%;height:1px;background:rgba(255,255,255,0.15)"></div>
+        </div>
+        <!-- Tags -->
+        <div style="margin-bottom:14px">
+          <p class="t-mono" style="font-size:9px;margin-bottom:8px;color:var(--muted)">TAGS</p>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">
+            <span class="tag" style="font-size:9px">baunilha</span>
+            <span class="tag" style="font-size:9px">chocolate</span>
+            <span class="tag" style="font-size:9px">cítrico</span>
+          </div>
+        </div>
+        <!-- Icons / Symbols -->
+        <div style="margin-bottom:14px">
+          <p class="t-mono" style="font-size:9px;margin-bottom:8px;color:var(--muted)">ÍCONES</p>
+          <div style="display:flex;gap:12px;font-size:18px;color:var(--gold)">
+            <span>●</span><span>◐</span><span>◇</span><span>≋</span><span>◯</span><span>∅</span>
+          </div>
+        </div>
+        <!-- Corners -->
+        <div>
+          <p class="t-mono" style="font-size:9px;margin-bottom:8px;color:var(--muted)">CANTOS</p>
+          <div style="display:flex;gap:16px;align-items:center">
+            <div style="width:28px;height:28px;border-radius:4px;border:1px solid rgba(255,255,255,0.1)"></div>
+            <div style="width:28px;height:28px;border-radius:8px;border:1px solid rgba(255,255,255,0.1)"></div>
+            <div style="width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,0.1)"></div>
+            <span class="t-mono" style="font-size:9px;color:var(--muted)">4 · 8 · 12 · 50%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ★ SLIDE 15: SCREENS DESKTOP — LIVE BROWSER MOCKUP ★ -->
+<div class="slide" data-slide="14" style="padding:40px 60px 96px">
+  <div style="position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div>
+        <p class="t-section anim">15</p>
+        <h2 class="anim d1" style="font-family:var(--serif);font-size:36px;font-weight:300">Screens Desktop</h2>
+      </div>
+      <a class="btn-live anim d2" onclick="openDemo('Microsite-Tech.html')"><span class="pulse-dot"></span>ABRIR DEMO FULL</a>
+    </div>
+    <div class="page-tabs anim d2">
+      <div class="page-tab active" onclick="switchMock('desktop-iframe','Microsite-Tech.html',this)">Landing</div>
+      <div class="page-tab" onclick="switchMock('desktop-iframe','Processo.html',this)">Processo</div>
+      <div class="page-tab" onclick="switchMock('desktop-iframe','Biblioteca.html',this)">Biblioteca</div>
+      <div class="page-tab" onclick="switchMock('desktop-iframe','Experiencia.html',this)">Experiência</div>
+      <div class="page-tab" onclick="switchMock('desktop-iframe','Encomendar.html',this)">Encomendar</div>
+    </div>
+    <div class="browser-mock anim d3" style="flex:1;display:flex;flex-direction:column">
+      <div class="browser-chrome">
+        <div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div>
+        <div class="browser-url"><span class="lock">🔒</span> oalquimista.pt</div>
+      </div>
+      <div class="browser-body" style="flex:1;overflow:hidden">
+        <iframe id="desktop-iframe" src="Microsite-Tech.html" style="height:100%"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ★ SLIDE 16: SCREENS DESKTOP + MOBILE — SIDE BY SIDE ★ -->
+<div class="slide" data-slide="15" style="padding:40px 60px 96px">
+  <div style="position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div>
+        <p class="t-section anim">16</p>
+        <h2 class="anim d1" style="font-family:var(--serif);font-size:36px;font-weight:300">Desktop <span class="t-accent">&</span> Mobile</h2>
+      </div>
+      <a class="btn-live anim d2" onclick="openDemo('Experiencia.html')"><span class="pulse-dot"></span>DEMO LIVE</a>
+    </div>
+    <p class="t-body anim d2" style="margin-bottom:20px">O Blend Builder permite compor o café em tempo real. A página Experiência convida a visitar o laboratório.</p>
+    <div class="anim d3" style="flex:1;display:flex;gap:32px;align-items:stretch;min-height:0">
+      <!-- Desktop mock -->
+      <div class="browser-mock" style="flex:1;display:flex;flex-direction:column;min-width:0">
+        <div class="browser-chrome">
+          <div class="browser-dot r"></div><div class="browser-dot y"></div><div class="browser-dot g"></div>
+          <div class="browser-url"><span class="lock">🔒</span> oalquimista.pt/experiencia</div>
+        </div>
+        <div class="browser-body" style="flex:1;overflow:hidden">
+          <iframe src="Experiencia.html" style="height:100%"></iframe>
+        </div>
+      </div>
+      <!-- iPhone mock -->
+      <div class="iphone-mock" style="align-self:center">
+        <div class="iphone-notch"></div>
+        <div class="iphone-status">9:41</div>
+        <div class="iphone-body">
+          <iframe src="Microsite-Tech.html" style="height:500px;width:375px;transform:scale(0.747);transform-origin:top left"></iframe>
+        </div>
+        <div class="iphone-home"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ★ SLIDE 17: SCREENS MOBILE — TRIPLE IPHONE MOCKUP ★ -->
+<div class="slide" data-slide="16" style="padding:40px 60px 96px">
+  <div style="position:relative;z-index:1;width:100%;height:100%;display:flex;flex-direction:column">
+    <p class="t-section anim">17</p>
+    <h2 class="anim d1" style="font-family:var(--serif);font-size:36px;font-weight:300;margin-bottom:24px">Screens Mobile <span class="t-mono" style="font-size:12px">375px</span></h2>
+    <div class="anim d2" style="flex:1;display:flex;gap:40px;justify-content:center;align-items:center;min-height:0">
+      <!-- iPhone 1: Landing -->
+      <div style="text-align:center">
+        <div class="iphone-mock">
+          <div class="iphone-notch"></div>
+          <div class="iphone-status">9:41</div>
+          <div class="iphone-body" style="overflow:hidden">
+            <iframe src="Microsite-Tech.html" style="height:540px;width:375px;transform:scale(0.747);transform-origin:top left"></iframe>
+          </div>
+          <div class="iphone-home"></div>
+        </div>
+        <p class="t-mono mt-sm" style="margin-top:12px;font-size:10px">Hero</p>
+      </div>
+      <!-- iPhone 2: Processo -->
+      <div style="text-align:center">
+        <div class="iphone-mock">
+          <div class="iphone-notch"></div>
+          <div class="iphone-status">9:41</div>
+          <div class="iphone-body" style="overflow:hidden">
+            <iframe src="Processo.html" style="height:540px;width:375px;transform:scale(0.747);transform-origin:top left"></iframe>
+          </div>
+          <div class="iphone-home"></div>
+        </div>
+        <p class="t-mono mt-sm" style="margin-top:12px;font-size:10px">Processo</p>
+      </div>
+      <!-- iPhone 3: Experiência -->
+      <div style="text-align:center">
+        <div class="iphone-mock">
+          <div class="iphone-notch"></div>
+          <div class="iphone-status">9:41</div>
+          <div class="iphone-body" style="overflow:hidden">
+            <iframe src="Experiencia.html" style="height:540px;width:375px;transform:scale(0.747);transform-origin:top left"></iframe>
+          </div>
+          <div class="iphone-home"></div>
+        </div>
+        <p class="t-mono mt-sm" style="margin-top:12px;font-size:10px">Experiência</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 18: TESTE -->
+<div class="slide" data-slide="17">
+  <div class="slide-bg" style="background-image:url(presentation-assets/18_-_teste.jpg);opacity:0.1"></div>
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">18</p>
+    <h2 class="t-title anim d1">Teste</h2>
+    <p class="t-body anim d2 mt-md" style="max-width:700px">Testes de usabilidade com 5 participantes do público-alvo. Cada sessão ~20 minutos, três tarefas:</p>
+    <div style="margin-top:40px;display:flex;flex-direction:column;gap:24px">
+      <div class="step anim d3"><span class="step-num">01</span><div><h3 style="font-size:20px;margin-bottom:6px">Compor um blend</h3><p class="t-body">100% conseguiram completar sem ajuda. Média: 2 min 40s.</p></div></div>
+      <div class="step anim d4"><span class="step-num">02</span><div><h3 style="font-size:20px;margin-bottom:6px">Interpretar a fórmula</h3><p class="t-body">80% compreenderam à primeira. 20% precisaram de ajuda contextual.</p></div></div>
+      <div class="step anim d5"><span class="step-num">03</span><div><h3 style="font-size:20px;margin-bottom:6px">Marcar uma visita</h3><p class="t-body">100% completaram. Feedback: processo claro e rápido.</p></div></div>
+    </div>
+    <div class="card card-gold anim d6 mt-md" style="max-width:700px;margin-top:32px">
+      <p class="t-mono" style="font-size:12px">Insight: o Blend Builder foi considerado "intuitivo e surpreendente" por 4 dos 5 participantes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 19: RESULTADOS -->
+<div class="slide" data-slide="18">
+  <div class="slide-bg" style="background-image:url(presentation-assets/19_-_resultados.jpg);opacity:0.1"></div>
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">19</p>
+    <h2 class="t-title anim d1">Resultados</h2>
+    <div class="grid-2 mt-lg" style="margin-top:48px;gap:32px">
+      <div class="stat-row anim d2" style="flex-direction:column;gap:8px"><span class="t-stat">5</span><span class="t-body">páginas desktop desenhadas</span><span class="t-mono" style="font-size:10px">Landing, Processo, Biblioteca, Experiência, Encomendar</span></div>
+      <div class="stat-row anim d3" style="flex-direction:column;gap:8px"><span class="t-stat">9.600</span><span class="t-body">combinações possíveis no blend builder</span><span class="t-mono" style="font-size:10px">4 origens × 100 torras × 6 aromas × 4 toppings</span></div>
+      <div class="stat-row anim d4" style="flex-direction:column;gap:8px"><span class="t-stat">24</span><span class="t-body">variantes de componentes interativos</span></div>
+      <div class="stat-row anim d5" style="flex-direction:column;gap:8px"><span class="t-stat">100%</span><span class="t-body">taxa de conclusão nos testes</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- SLIDE 19B: HEURÍSTICAS DE NIELSEN — VISÃO GERAL -->
+<div class="slide" data-slide="19">
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">19b</p>
+    <h2 class="t-title anim d1" style="font-size:clamp(28px,3.5vw,44px)">10 Heurísticas de Usabilidade<br><span class="t-accent">de Nielsen e Molich</span></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 48px;margin-top:32px">
+      <div class="anim d2" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">1</span><span class="t-body">Visibilidade sobre o sistema (Feedback)</span></div>
+      <div class="anim d2" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">6</span><span class="t-body">Mais reconhecimento que recordação</span></div>
+      <div class="anim d3" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">2</span><span class="t-body">Linguagem do utilizador</span></div>
+      <div class="anim d3" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">7</span><span class="t-body">Atalhos</span></div>
+      <div class="anim d4" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">3</span><span class="t-body">Saídas claramente marcadas</span></div>
+      <div class="anim d4" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">8</span><span class="t-body">Design simples e natural</span></div>
+      <div class="anim d5" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">4</span><span class="t-body">Coerência e padrões</span></div>
+      <div class="anim d5" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">9</span><span class="t-body">Boa mensagem de erro</span></div>
+      <div class="anim d6" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">5</span><span class="t-body">Prevenção de erro</span></div>
+      <div class="anim d6" style="display:flex;gap:16px;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06)"><span class="t-stat" style="font-size:24px;min-width:36px">10</span><span class="t-body">Ajuda e documentação</span></div>
+    </div>
+    <p class="t-mono anim d7" style="font-size:9px;opacity:0.35;margin-top:20px">Fonte: Nielsen, J. (1994). 10 Usability Heuristics for User Interface Design. nngroup.com</p>
+  </div>
+</div>
+
+<!-- SLIDE 19C: HEURÍSTICAS APLICADAS — PARTE 1 -->
+<div class="slide" data-slide="20">
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">19c</p>
+    <h2 class="t-title anim d1">Heurísticas Aplicadas <span class="t-accent">· Parte 1</span></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px">
+      <div class="card anim d2">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span class="t-stat" style="font-size:22px;color:var(--gold)">1</span><h3>Visibilidade do sistema</h3></div>
+        <p class="t-body" style="margin-bottom:10px">O Blend Builder mostra o progresso em tempo real: barra de passos (Origem → Torra → Aroma → Topping), pré-visualização do blend e feedback visual a cada escolha.</p>
+        <p class="t-mono" style="font-size:10px;color:var(--gold);opacity:0.7">✓ Cumprida</p>
+      </div>
+      <div class="card anim d3">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span class="t-stat" style="font-size:22px;color:var(--gold)">2</span><h3>Linguagem do utilizador</h3></div>
+        <p class="t-body" style="margin-bottom:10px">Vocabulário acessível: "escolha a origem", "intensidade da torra", "o seu blend". Sem linguagem técnica desnecessária. Termos familiares para quem bebe café.</p>
+        <p class="t-mono" style="font-size:10px;color:var(--gold);opacity:0.7">✓ Cumprida</p>
+      </div>
+      <div class="card anim d4">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span class="t-stat" style="font-size:22px;color:var(--gold)">3</span><h3>Saídas claramente marcadas</h3></div>
+        <p class="t-body" style="margin-bottom:10px">Botão "voltar" visível em cada passo do builder. Navegação principal sempre acessível. O utilizador nunca fica preso num ecrã sem saída clara.</p>
+        <p class="t-mono" style="font-size:10px;color:var(--gold);opacity:0.7">✓ Cumprida</p>
+      </div>
+      <div class="card anim d5">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span class="t-stat" style="font-size:22px;color:var(--gold)">4</span><h3>Coerência e padrões</h3></div>
+        <p class="t-body" style="margin-bottom:10px">Design system consistente: mesma tipografia (Cormorant + Inter), mesma paleta de cores, botões e cards com o mesmo estilo em todas as páginas do site.</p>
+        <p class="t-mono" style="font-size:10px;color:var(--gold);opacity:0.7">✓ Cumprida</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 19D: HEURÍSTICAS APLICADAS — PARTE 2 -->
+<div class="slide" data-slide="21">
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">19d</p>
+    <h2 class="t-title anim d1">Heurísticas Aplicadas <span class="t-accent">· Parte 2</span></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:32px">
+      <div class="card anim d2">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span class="t-stat" style="font-size:22px;color:var(--gold)">5</span><h3>Prevenção de erro</h3></div>
+        <p class="t-body" style="margin-bottom:10px">Validação em tempo real nos formulários. Confirmação antes de submeter encomenda. Impossível avançar sem preencher campos obrigatórios.</p>
+        <p class="t-mono" style="font-size:10px;color:var(--gold);opacity:0.7">✓ Cumprida</p>
+      </div>
+      <div class="card anim d3">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span class="t-stat" style="font-size:22px;color:var(--gold)">6</span><h3>Reconhecimento em vez de recordação</h3></div>
+        <p class="t-body" style="margin-bottom:10px">Opções visíveis em cada passo: cards com imagens das origens, slider visual para a torra, ícones para aromas. Nada fica escondido em menus.</p>
+        <p class="t-mono" style="font-size:10px;color:var(--gold);opacity:0.7">✓ Cumprida</p>
+      </div>
+      <div class="card anim d4">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span class="t-stat" style="font-size:22px;color:var(--gold)">8</span><h3>Design simples e natural</h3></div>
+        <p class="t-body" style="margin-bottom:10px">Layout limpo, espaço negativo generoso, hierarquia visual clara. Cada página foca numa única ação principal sem ruído visual.</p>
+        <p class="t-mono" style="font-size:10px;color:var(--gold);opacity:0.7">✓ Cumprida</p>
+      </div>
+      <div class="card anim d5">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span class="t-stat" style="font-size:22px;color:var(--gold)">10</span><h3>Ajuda e documentação</h3></div>
+        <p class="t-body" style="margin-bottom:10px">Ícones (?) com descrições nos termos técnicos do café. Cada passo do builder tem uma explicação curta. A página Processo detalha todo o método de forma acessível.</p>
+        <p class="t-mono" style="font-size:10px;color:var(--gold);opacity:0.7">✓ Cumprida</p>
+      </div>
+    </div>
+    <div class="card card-gold anim d6 mt-md" style="margin-top:24px;max-width:800px">
+      <p class="t-mono" style="font-size:12px">Resultado: 8 das 10 heurísticas avaliadas e cumpridas. Heurísticas 7 (Atalhos) e 9 (Mensagens de erro) a implementar em fase de desenvolvimento.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ★ SLIDE 20: PROTOTYPE — LIVE DEMO ★ -->
+<div class="slide center" data-slide="22">
+  <div class="slide-bg" style="background-image:url(presentation-assets/20_-_prototype.jpg);opacity:0.12"></div>
+  <div style="position:relative;z-index:1;text-align:center;max-width:800px;margin:0 auto">
+    <p class="t-section anim">20</p>
+    <h2 class="t-title anim d1">Prototype</h2>
+    <p class="t-body anim d2 mt-md" style="max-width:600px;margin:20px auto 0">O protótipo interativo permite navegar entre todas as páginas do micro-site e testar o Blend Builder com interacções reais.</p>
+    <div class="anim d3 mt-lg" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:40px">
+      <a class="btn-live" onclick="openDemo('Microsite-Tech.html')" style="font-size:15px;padding:16px 36px"><span class="pulse-dot"></span>EXPLORAR SITE LIVE</a>
+      <a class="btn-live" href="https://www.figma.com/proto/xVHxWOQHarExR5OOL4ifX6" target="_blank" style="background:none;border-color:rgba(255,255,255,0.15);color:var(--ink)">Figma Prototype →</a>
+    </div>
+    <div class="anim d4 mt-md" style="margin-top:32px">
+      <p class="t-mono" style="font-size:10px;color:var(--muted)">Clica nos botões acima para navegar o site real durante a apresentação</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 21: CAMPANHA MARKETING -->
+<div class="slide" data-slide="23">
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">21</p>
+    <h2 class="t-title anim d1" style="font-size:clamp(36px,4.5vw,56px)">Campanha de marketing<br><span class="t-accent t-italic">digital</span></h2>
+    <p class="t-label anim d2 mt-md" style="margin-top:24px">Estratégia de lançamento</p>
+    <div class="grid-2 mt-md" style="margin-top:28px;gap:24px">
+      <div class="card anim d3"><h3 class="t-accent">Instagram</h3><p>Behind-the-scenes do laboratório. Reels do processo de torra. Stories com fórmulas de blends.</p></div>
+      <div class="card anim d4"><h3 class="t-accent">Blog editorial</h3><p>Série 'Diário do Alquimista' com histórias de origens, perfis de torra e bastidores.</p></div>
+      <div class="card anim d5"><h3 class="t-accent">Parcerias locais</h3><p>Restaurantes de autor em Lisboa. Pop-ups em mercados e feiras gastronómicas.</p></div>
+      <div class="card anim d6"><h3 class="t-accent">Google Ads</h3><p>Keywords: 'café personalizado Lisboa', 'blend artesanal'. Landing page dedicada.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 22: CAMPANHA MARKETING 2 -->
+<div class="slide" data-slide="24">
+  <div style="position:relative;z-index:1;width:100%">
+    <p class="t-section anim">22</p>
+    <h2 class="t-title anim d1" style="font-size:clamp(36px,4.5vw,56px)">Campanha de marketing<br><span class="t-accent t-italic">digital</span></h2>
+    <p class="t-label anim d2 mt-md" style="margin-top:24px">Conteúdo e métricas</p>
+    <div class="grid-4 mt-md anim d3" style="margin-top:28px">
+      <div class="card"><h3 class="t-accent">Educação</h3><p>Origens, processos, vocabulário do café de especialidade</p></div>
+      <div class="card"><h3 class="t-accent">Bastidores</h3><p>O laboratório, o torrador, o ritual de preparação</p></div>
+      <div class="card"><h3 class="t-accent">Comunidade</h3><p>Blends criados por clientes, fórmulas partilhadas</p></div>
+      <div class="card"><h3 class="t-accent">Produto</h3><p>Novos lotes, origens sazonais, eventos presenciais</p></div>
+    </div>
+    <div class="card card-gold anim d4 mt-md" style="margin-top:28px">
+      <p class="t-mono" style="font-size:12px">KPIs: Engagement rate > 5% · Blog engagement > 40% · Reservas via digital > 60%</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 23: FIM -->
+<div class="slide center" data-slide="25">
+  <div class="cover-ellipse" style="opacity:0.3"><img src="presentation-assets/24_fim.png" alt="Fim"></div>
+  <div style="position:relative;z-index:1;text-align:center">
+    <div class="dot anim pulse" style="margin-bottom:20px"></div>
+    <h2 class="t-hero anim d1">Fim</h2>
+    <p class="t-subtitle anim d2 t-italic" style="margin-top:12px">Fórmula concluída.</p>
+    <div class="divider anim d3" style="margin:32px auto"></div>
+    <p class="anim d4" style="font-size:16px;font-weight:400">João Miguel Martins</p>
+    <p class="t-mono anim d5 mt-sm" style="font-size:11px;color:var(--muted);margin-top:8px">Design Web 4.0 / Turma B</p>
+    <a class="btn-live anim d6" onclick="openDemo('Microsite-Tech.html')" style="margin-top:40px"><span class="pulse-dot"></span>REVISITAR O SITE</a>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- NAVIGATION -->
+<nav class="nav-bar">
+  <button class="nav-btn" id="prevBtn" onclick="go(-1)">← Anterior</button>
+  <div class="nav-center">
+    <div class="slide-dots" id="dots"></div>
+    <span class="slide-counter" id="counter">1 / 26</span>
+  </div>
+  <button class="nav-btn" id="nextBtn" onclick="go(1)">Próximo →</button>
+</nav>
+
+<script>
+/* === SLIDE ENGINE === */
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0, transitioning = false;
+
+const dotsEl = document.getElementById('dots');
+for (let i = 0; i < total; i++) {
+  const d = document.createElement('div');
+  d.className = 'slide-dot' + (i === 0 ? ' active' : '');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+}
+
+function updateUI() {
+  document.getElementById('counter').textContent = (current+1)+' / '+total;
+  document.getElementById('progress').style.width = ((current+1)/total*100)+'%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+  document.querySelectorAll('.slide-dot').forEach((d,i) => d.classList.toggle('active', i === current));
+}
+
+function goTo(idx) {
+  if (idx === current || idx < 0 || idx >= total || transitioning) return;
+  transitioning = true;
+  const dir = idx > current ? 1 : -1;
+
+  // Clean ALL slides — remove stale classes and inline styles
+  slides.forEach(s => {
+    s.style.transform = '';
+    if (s !== slides[current]) s.classList.remove('active', 'prev');
+  });
+
+  const oldSlide = slides[current];
+  const newSlide = slides[idx];
+
+  // Exit old slide
+  oldSlide.classList.remove('active');
+  if (dir > 0) {
+    oldSlide.classList.add('prev'); // slide out left
+  }
+  // backward: old slide returns to default CSS (slides out right)
+
+  // For backward nav, make new slide enter from the left
+  if (dir < 0) {
+    newSlide.classList.add('prev');     // position it on the left instantly
+    newSlide.offsetHeight;              // force reflow
+    newSlide.classList.remove('prev');  // now transition to center
+  }
+
+  // Activate new slide
+  newSlide.classList.add('active');
+  current = idx;
+  updateUI();
+
+  setTimeout(() => {
+    transitioning = false;
+    slides.forEach(s => {
+      if (!s.classList.contains('active')) {
+        s.classList.remove('prev');
+        s.style.transform = '';
+      }
+    });
+  }, 900);
+}
+function go(dir) { goTo(current + dir); }
+
+/* === KEYBOARD === */
+document.addEventListener('keydown', e => {
+  if (document.getElementById('demoOverlay').classList.contains('open')) {
+    if (e.key === 'Escape') closeDemo();
+    return;
+  }
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+  if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+  if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+  if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+
+/* === TOUCH === */
+let touchX = 0;
+document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const d = touchX - e.changedTouches[0].clientX;
+  if (Math.abs(d) > 60 && !document.getElementById('demoOverlay').classList.contains('open')) go(d > 0 ? 1 : -1);
+});
+
+/* === SCROLL === */
+let wt;
+document.addEventListener('wheel', e => {
+  if (document.getElementById('demoOverlay').classList.contains('open')) return;
+  if (e.target.closest('.browser-body') || e.target.closest('.iphone-body')) return;
+  if (wt) return;
+  wt = setTimeout(() => { wt = null; }, 800);
+  go(e.deltaY > 0 ? 1 : -1);
+}, { passive: true });
+
+/* === LIVE DEMO OVERLAY === */
+function openDemo(page) {
+  const overlay = document.getElementById('demoOverlay');
+  const iframe = document.getElementById('demoIframe');
+  // Set src with fallback
+  iframe.src = page;
+  // Force display first, then animate opacity
+  overlay.style.display = 'flex';
+  overlay.style.opacity = '0';
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      overlay.style.opacity = '1';
+      overlay.classList.add('open');
+    });
+  });
+  // Update active tab
+  document.querySelectorAll('#demoTabs .page-tab').forEach(t => {
+    t.classList.toggle('active', t.textContent.trim() === getPageLabel(page));
+  });
+}
+
+function closeDemo() {
+  const overlay = document.getElementById('demoOverlay');
+  overlay.style.opacity = '0';
+  setTimeout(() => {
+    overlay.classList.remove('open');
+    overlay.style.display = 'none';
+    document.getElementById('demoIframe').src = 'about:blank';
+  }, 500);
+}
+
+function demoNav(page, tab) {
+  document.getElementById('demoIframe').src = page;
+  document.querySelectorAll('#demoTabs .page-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+function demoDevice(width, btn) {
+  const iframe = document.getElementById('demoIframe');
+  if (width === '100%') {
+    iframe.style.maxWidth = '';
+    iframe.style.margin = '';
+  } else {
+    iframe.style.maxWidth = width;
+    iframe.style.margin = '0 auto';
+    iframe.style.display = 'block';
+  }
+  document.querySelectorAll('.demo-device-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function getPageLabel(page) {
+  const map = {'Microsite-Tech.html':'Landing','Processo.html':'Processo','Biblioteca.html':'Biblioteca','Experiencia.html':'Experiência','Encomendar.html':'Encomendar'};
+  return map[page] || page;
+}
+
+/* === INLINE MOCKUP PAGE SWITCHING === */
+function switchMock(iframeId, page, tab) {
+  document.getElementById(iframeId).src = page;
+  const tabs = tab.parentElement.querySelectorAll('.page-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+}
+
+updateUI();
+</script>
+</body>
+</html>
