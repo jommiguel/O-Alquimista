@@ -118,6 +118,11 @@
           opacity: 1;
         }
       }
+      .bar .status.closed .pulse {
+        background: var(--ink-soft);
+        animation: none;
+        opacity: 0.5;
+      }
 
       main {
         position: relative;
@@ -1339,8 +1344,8 @@
       <a class="back" href="Microsite-Tech.html#blend"
         >← Voltar ao laboratório</a
       >
-      <div class="status">
-        <span class="pulse"></span><span>lab&nbsp;ativo</span>
+      <div class="status" id="lab-status">
+        <span class="pulse"></span><span id="lab-label">lab&nbsp;ativo</span>
       </div>
       <button
         class="burger"
@@ -1869,9 +1874,41 @@
         "Dezembro",
       ];
       var dowNames = ["seg", "ter", "qua", "qui", "sex", "sáb", "dom"];
-      var viewYear = 2026,
-        viewMonth = 4,
-        selDay = 12;
+      var _now = new Date();
+      var todayY = _now.getFullYear(),
+        todayM = _now.getMonth(),
+        todayD = _now.getDate();
+      var viewYear = todayY,
+        viewMonth = todayM,
+        selYear = todayY,
+        selMonth = todayM,
+        selDay = todayD;
+      function _fmtDate(y, m, d) {
+        var dw = new Date(y, m, d).getDay();
+        return (
+          d +
+          " " +
+          monthNames[m].toLowerCase() +
+          " · " +
+          dowNames[dw === 0 ? 6 : dw - 1]
+        );
+      }
+      /* Seleção inicial = hoje, ou o primeiro dia aberto seguinte
+         (o lab fecha domingo e segunda). */
+      (function () {
+        var dt = new Date(todayY, todayM, todayD);
+        for (var i = 0; i < 370; i++) {
+          var dw = dt.getDay();
+          if (dw !== 0 && dw !== 1) break;
+          dt.setDate(dt.getDate() + 1);
+        }
+        selYear = dt.getFullYear();
+        selMonth = dt.getMonth();
+        selDay = dt.getDate();
+        viewYear = selYear;
+        viewMonth = selMonth;
+        bookState.date = _fmtDate(selYear, selMonth, selDay);
+      })();
 
       function buildCal() {
         var root = document.getElementById("cal");
@@ -1896,11 +1933,18 @@
             var dt = new Date(viewYear, viewMonth, d);
             var dow = dt.getDay();
             var closed = dow === 0 || dow === 1;
-            var past = viewYear === 2026 && viewMonth === 4 && d < 10;
+            var past =
+              viewYear < todayY ||
+              (viewYear === todayY && viewMonth < todayM) ||
+              (viewYear === todayY && viewMonth === todayM && d < todayD);
             var btn = document.createElement("button");
             btn.className = "day" + (closed || past ? " dis" : "");
             btn.textContent = d;
-            if (d === selDay && viewYear === 2026 && viewMonth === 4)
+            if (
+              d === selDay &&
+              viewYear === selYear &&
+              viewMonth === selMonth
+            )
               btn.classList.add("active");
             if (!(closed || past)) {
               btn.addEventListener("click", function () {
@@ -1909,6 +1953,8 @@
                 });
                 btn.classList.add("active");
                 selDay = d;
+                selYear = viewYear;
+                selMonth = viewMonth;
                 bookState.date =
                   d +
                   " " +
@@ -1928,6 +1974,7 @@
       }
 
       document.getElementById("prev").addEventListener("click", function () {
+        if (viewYear === todayY && viewMonth === todayM) return;
         viewMonth--;
         if (viewMonth < 0) {
           viewMonth = 11;
@@ -1945,6 +1992,25 @@
       });
       buildCal();
       bookRender();
+
+      /* --- ESTADO DO LAB ---
+   Aberto ter–sáb · 09h00–19h00. Fora disso mostra "lab inativo".
+   Reavalia a cada minuto, sem precisar de recarregar. */
+      (function () {
+        var elS = document.getElementById("lab-status");
+        var elL = document.getElementById("lab-label");
+        if (!elS || !elL) return;
+        function refresh() {
+          var n = new Date();
+          var dw = n.getDay(); // 0=dom, 1=seg … 6=sáb
+          var h = n.getHours();
+          var open = dw >= 2 && dw <= 6 && h >= 9 && h < 19;
+          elS.classList.toggle("closed", !open);
+          elL.innerHTML = open ? "lab&nbsp;ativo" : "lab&nbsp;inativo";
+        }
+        refresh();
+        setInterval(refresh, 60000);
+      })();
 
       /* --- VALIDAÇÃO E SUBMISSÃO ---
    Valida os campos obrigatórios antes de "submeter".
