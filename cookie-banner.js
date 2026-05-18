@@ -113,7 +113,7 @@
     '<span class="alq-ck-corner br" aria-hidden="true"></span>',
     '<button class="alq-ck-x" data-act="reject" aria-label="Rejeitar cookies não essenciais">×</button>',
     '<div class="alq-ck-tag">// laboratório · consentimento</div>',
-    '<p class="alq-ck-title">Sabes o que acompanha bem café? <em>Cookies.</em></p>',
+    '<p class="alq-ck-title">Sabes o que acompanha bem o café? <em>Cookies.</em></p>',
     '<p class="alq-ck-text">Usamos cookies para melhorar a experiência no laboratório.</p>',
     '<div class="alq-ck-prefs" id="alqCkPrefs" aria-hidden="true">',
     '<div class="alq-ck-prow"><div>',
