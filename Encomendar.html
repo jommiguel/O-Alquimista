@@ -210,8 +210,11 @@
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--ink-soft);
+        background: none;
         border: 1px solid var(--rule-strong);
         padding: 8px 14px;
+        cursor: pointer;
+        white-space: nowrap;
         transition: all 0.2s;
       }
       .summary .s-edit:hover {
@@ -298,6 +301,212 @@
       .r-blend-row .rb-price {
         color: var(--gold);
         white-space: nowrap;
+      }
+
+      /* ── MINI-RESUMO (bloco de topo, clicável) ── */
+      .summary .sm-main {
+        min-width: 0;
+      }
+      .cs-list {
+        margin: 10px 0 4px;
+      }
+      .cs-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 7px 0;
+        border-bottom: 1px solid var(--rule);
+      }
+      .cs-row .cs-desc {
+        font-size: 14px;
+        color: var(--ink-soft);
+        min-width: 0;
+      }
+      .cs-row .cs-desc b {
+        color: var(--ink);
+        font-weight: 500;
+      }
+      .cs-row .cs-right {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        white-space: nowrap;
+      }
+      .cs-row .cs-price {
+        color: var(--gold);
+      }
+      .cs-edit {
+        font-family: var(--mono);
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink-muted);
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .cs-edit:hover {
+        color: var(--gold);
+      }
+      .sm-sub {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--mono);
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        color: var(--ink-soft);
+        padding-top: 10px;
+      }
+      .blend-card.flash {
+        animation: cardflash 1.6s ease;
+      }
+      @keyframes cardflash {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(212, 168, 90, 0);
+          border-color: var(--rule);
+        }
+        20% {
+          box-shadow: 0 0 0 2px rgba(212, 168, 90, 0.55);
+          border-color: var(--gold);
+        }
+      }
+
+      /* ── BARRA-RESUMO FIXA (mobile) + BOTTOM-SHEET ── */
+      .cart-bar {
+        display: none;
+      }
+      .cart-sheet {
+        display: none;
+      }
+      @media (max-width: 1100px) {
+        body {
+          padding-bottom: 62px;
+        }
+        .cart-bar {
+          display: flex;
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 60;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 14px 20px;
+          background: rgba(19, 19, 18, 0.92);
+          backdrop-filter: blur(10px);
+          border-top: 1px solid var(--rule-strong);
+          font-family: var(--mono);
+          font-size: 13px;
+          color: var(--ink);
+        }
+        .cart-bar .cb-total {
+          color: var(--gold);
+        }
+        .cart-bar .cb-open {
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--ink-soft);
+          background: none;
+          border: 1px solid var(--rule-strong);
+          padding: 8px 12px;
+          cursor: pointer;
+        }
+        .cart-sheet {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 70;
+          pointer-events: none;
+        }
+        .cart-sheet .cs-backdrop {
+          position: absolute;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.6);
+          opacity: 0;
+          transition: opacity 0.25s;
+        }
+        .cart-sheet .cs-panel {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          max-height: 80vh;
+          overflow-y: auto;
+          background: var(--bg-2);
+          border-top: 1px solid var(--rule-strong);
+          padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+          transform: translateY(100%);
+          transition: transform 0.3s ease;
+        }
+        .cart-sheet.open {
+          pointer-events: auto;
+        }
+        .cart-sheet.open .cs-backdrop {
+          opacity: 1;
+        }
+        .cart-sheet.open .cs-panel {
+          transform: translateY(0);
+        }
+        .cart-sheet .cs-sheet-head {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+        }
+        .cart-sheet .cs-sheet-head .s-label {
+          margin: 0;
+        }
+        .cart-sheet .cs-close {
+          font-size: 20px;
+          line-height: 1;
+          color: var(--ink-soft);
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px;
+        }
+        .cart-sheet .sheet-total {
+          display: flex;
+          justify-content: space-between;
+          font-family: var(--mono);
+          font-size: 14px;
+          color: var(--ink);
+          padding: 14px 0;
+          margin-top: 6px;
+          border-top: 1px solid var(--rule-strong);
+        }
+        .cart-sheet .sheet-total b {
+          color: var(--gold);
+          font-weight: 500;
+        }
+        .cart-sheet .sheet-add {
+          width: 100%;
+          font-family: var(--mono);
+          font-size: 12px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: var(--gold);
+          background: none;
+          border: 1px dashed var(--rule-strong);
+          padding: 14px;
+          cursor: pointer;
+          margin-top: 8px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .blend-card.flash {
+          animation: none;
+        }
+        .cart-sheet .cs-panel,
+        .cart-sheet .cs-backdrop {
+          transition: none;
+        }
       }
 
       /* ── RESUMO DO BLEND — mini preview com fórmula e preço ── */
@@ -1472,12 +1681,17 @@
             />
           </svg>
         </div>
-        <div>
+        <div class="sm-main">
           <div class="s-label">A sua encomenda</div>
-          <div class="s-name" id="cart-count">1 blend</div>
-          <div class="s-formula">componha quantos blends quiser</div>
+          <div id="cart-summary" class="cs-list"></div>
+          <div class="sm-sub">
+            <span>Subtotal</span
+            ><span id="sm-subtotal" class="gold">€&nbsp;0,00</span>
+          </div>
         </div>
-        <a class="s-edit" href="Microsite-Tech.html#blend">Compor blend ↗</a>
+        <button type="button" class="s-edit" id="add-blend-top">
+          + Adicionar mais um blend
+        </button>
       </section>
 
       <section class="bk">
@@ -1520,10 +1734,6 @@
             </div>
 
             <div id="blend-list"></div>
-
-            <button type="button" id="add-blend" class="add-blend">
-              + adicionar outro blend
-            </button>
           </div>
 
           <div class="section" id="sec-calendar">
@@ -1728,6 +1938,44 @@
         </aside>
       </section>
     </main>
+
+    <div class="cart-bar" id="cart-bar">
+      <span
+        ><span id="cb-count">1 blend</span> ·
+        <span class="cb-total" id="cb-total">€&nbsp;0,00</span></span
+      >
+      <button type="button" class="cb-open" id="cart-bar-open">
+        Ver resumo ▴
+      </button>
+    </div>
+    <div class="cart-sheet" id="cart-sheet">
+      <div class="cs-backdrop" id="cs-backdrop"></div>
+      <div
+        class="cs-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Resumo da encomenda"
+      >
+        <div class="cs-sheet-head">
+          <div class="s-label">A sua encomenda</div>
+          <button
+            type="button"
+            class="cs-close"
+            id="cs-close"
+            aria-label="Fechar"
+          >
+            ×
+          </button>
+        </div>
+        <div id="sheet-body"></div>
+        <div class="sheet-total">
+          <span>Total</span><b id="sheet-total-val">€&nbsp;0,00</b>
+        </div>
+        <button type="button" class="sheet-add" id="add-blend-sheet">
+          + Adicionar mais um blend
+        </button>
+      </div>
+    </div>
 
     <footer>© 2026 O Alquimista · Laboratório do Grão</footer>
 
@@ -2322,19 +2570,50 @@
         });
 
         list.innerHTML = listHTML;
-        rb.innerHTML =
-          rbHTML ||
+        var emptyRB =
           '<div class="r-blend-row"><span class="rb-desc">Sem blends — componha um</span></div>';
+        rb.innerHTML = rbHTML || emptyRB;
+
+        /* Mini-resumo de topo (clicável: 'editar' salta ao cartão). */
+        var csHTML = "";
+        cart.forEach(function (it) {
+          var f = SIZES[it.size];
+          var lineTot = unitPrice(it) * it.qty;
+          csHTML +=
+            '<div class="cs-row"><span class="cs-desc"><b>' +
+            esc(cleanName(it.name)) +
+            "</b> · " +
+            f.label +
+            " · " +
+            (it.grind === "ground" ? "moído" : "em grão") +
+            " ×" +
+            it.qty +
+            '</span><span class="cs-right"><span class="cs-price">' +
+            fmtEUR(lineTot) +
+            '</span><button type="button" class="cs-edit" data-edit="' +
+            esc(it.id) +
+            '">editar</button></span></div>';
+        });
+        var csEl = document.getElementById("cart-summary");
+        if (csEl)
+          csEl.innerHTML =
+            csHTML ||
+            '<div class="cs-row"><span class="cs-desc">Sem blends — adicione um.</span></div>';
 
         var home = deliveryMode === "home";
         var total = subtotal + (home ? SHIPPING : 0);
         setVal(document.getElementById("r-subtotal"), fmtEUR(subtotal));
         setVal(document.getElementById("r-ship-val"), fmtEUR(SHIPPING));
         setVal(document.getElementById("r-total-val"), fmtEUR(total));
-        var cc = document.getElementById("cart-count");
-        if (cc)
-          cc.textContent =
-            cart.length + (cart.length === 1 ? " blend" : " blends");
+        setVal(document.getElementById("sm-subtotal"), fmtEUR(subtotal));
+
+        var nLabel =
+          cart.length + (cart.length === 1 ? " blend" : " blends");
+        setVal(document.getElementById("cb-count"), nLabel);
+        setVal(document.getElementById("cb-total"), fmtEUR(total));
+        var sb = document.getElementById("sheet-body");
+        if (sb) sb.innerHTML = rbHTML || emptyRB;
+        setVal(document.getElementById("sheet-total-val"), fmtEUR(total));
         saveCart();
       }
 
@@ -2371,12 +2650,49 @@
           renderBlends();
         });
 
-      var addBtn = document.getElementById("add-blend");
-      if (addBtn)
-        addBtn.addEventListener("click", function () {
-          saveCart();
-          window.location.href = "Microsite-Tech.html#blend";
+      function goCompose() {
+        saveCart();
+        window.location.href = "Microsite-Tech.html#blend";
+      }
+      function bindClick(id, fn) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener("click", fn);
+      }
+      bindClick("add-blend-top", goCompose);
+      bindClick("add-blend-sheet", goCompose);
+
+      var sheetEl = document.getElementById("cart-sheet");
+      function closeSheet() {
+        if (sheetEl) sheetEl.classList.remove("open");
+      }
+
+      /* 'editar' no mini-resumo → fecha o sheet (se aberto) e faz
+         scroll suave até ao cartão respetivo, com um flash subtil. */
+      var csClick = document.getElementById("cart-summary");
+      if (csClick)
+        csClick.addEventListener("click", function (e) {
+          var b = e.target.closest("[data-edit]");
+          if (!b) return;
+          var card = document.querySelector(
+            '.blend-card[data-id="' + b.getAttribute("data-edit") + '"]',
+          );
+          if (!card) return;
+          closeSheet();
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+          card.classList.remove("flash");
+          void card.offsetWidth;
+          card.classList.add("flash");
         });
+
+      /* Barra-resumo fixa (mobile) ↔ bottom-sheet. */
+      bindClick("cart-bar-open", function () {
+        if (sheetEl) sheetEl.classList.add("open");
+      });
+      bindClick("cs-close", closeSheet);
+      bindClick("cs-backdrop", closeSheet);
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeSheet();
+      });
 
       loadCart();
       renderBlends();
