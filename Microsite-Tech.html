@@ -221,10 +221,10 @@ main{position:relative;z-index:1;padding-top:48px}
    Layout de 2 colunas: sidebar sticky à esquerda com o título,
    e lista de origens à direita com grid de 4 colunas por linha
    (id, nome, descrição, valor). */
-.specs{display:grid;grid-template-columns:280px 1fr;border-bottom:1px solid var(--rule)}
+.specs{display:grid;grid-template-columns:360px 1fr;border-bottom:1px solid var(--rule)}
 .specs-l{padding:80px 40px;border-right:1px solid var(--rule);position:sticky;top:48px;align-self:start}
 .specs-l .tag{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-.specs-l h2{font-family:var(--sans);font-weight:300;font-size:36px;line-height:1.1;letter-spacing:-0.02em;margin:0}
+.specs-l h2{font-family:var(--sans);font-weight:300;font-size:36px;line-height:1.1;letter-spacing:-0.02em;margin:0;overflow-wrap:break-word}
 .specs-l h2 .accent{color:var(--gold)}
 .specs-r{padding:40px 0}
 .spec-row{display:grid;grid-template-columns:80px 200px 1fr 100px;gap:24px;padding:24px 40px;border-bottom:1px solid var(--rule);align-items:center}
