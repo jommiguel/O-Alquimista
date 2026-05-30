@@ -933,7 +933,7 @@
           margin-right: 0;
         }
         .bk-r {
-          position: static;
+          position: relative;
           width: auto;
           height: auto;
           padding: 40px 24px;
@@ -1272,12 +1272,16 @@
       .bk-r.success .sb-tag,
       .bk-r.success .sb-h,
       .bk-r.success .sb-row,
+      .bk-r.success #r-blends,
       .bk-r.success .sb-cta,
       .bk-r.success .sb-fine,
       .bk-r.success .sb-where,
       .bk-r.success .pay-total {
         animation: fadeOut 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         pointer-events: none;
+      }
+      .bk-r.success #r-blends {
+        animation-delay: 0.06s;
       }
       .bk-r.success .sb-h {
         animation-delay: 0.03s;
@@ -2352,6 +2356,16 @@
                 : "entrega em 48h na morada indicada") +
               "</span></p>";
             sidebar.appendChild(msg);
+            // Em ecrãs estreitos a sidebar fica no fim da página: leva a
+            // confirmação ao centro do ecrã para o utilizador a ver logo,
+            // sem ter de andar à procura com scroll.
+            if (window.matchMedia("(max-width: 1100px)").matches) {
+              try {
+                sidebar.scrollIntoView({ behavior: "smooth", block: "center" });
+              } catch (e) {
+                sidebar.scrollIntoView();
+              }
+            }
           }
         });
 
