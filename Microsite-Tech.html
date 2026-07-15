@@ -257,6 +257,10 @@ footer{padding:32px 40px;text-align:center;font-family:var(--mono);font-size:10p
    A grid do hero passa a 1 coluna, paddings reduzidos.
    A 520px simplifica ainda mais para ecrãs pequenos. */
 @media(max-width:1000px){
+  /* Em desktop o .about tem 120px de topo; em mobile isso deixava um vazio
+     logo a seguir aos CTAs do hero (o CTA ficava a flutuar sobre preto).
+     64px chega para respirar e faz a seccao seguinte ancorar os botoes. */
+  .about{padding-top:64px}
   .about-grid{grid-template-columns:1fr;gap:32px;padding:0 24px 56px}
   .about-strip{grid-template-columns:1fr 1fr}
   .tests{padding:80px 24px}
