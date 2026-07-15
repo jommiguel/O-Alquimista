@@ -43,7 +43,10 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+/* overflow-x:clip corta qualquer overflow horizontal residual em todos os
+   breakpoints sem criar scroll container (ao contrario de overflow:hidden,
+   que forcava overflow-y:auto e partia o position:sticky do .specs-l). */
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:clip}
 a{color:inherit;text-decoration:none}
 img{max-width:100%;height:auto}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(232,230,224,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(232,230,224,0.025) 1px,transparent 1px);background-size:56px 56px}
@@ -259,11 +262,14 @@ footer{padding:32px 40px;text-align:center;font-family:var(--mono);font-size:10p
   .tests{padding:80px 24px}
   .tests-grid{grid-template-columns:1fr}
   .tests-head h2{font-size:32px}
-  .bar{grid-template-columns:auto 1fr auto auto;gap:10px;padding:0 14px}
+  /* Barra mobile: flex com space-between em vez de grid de 4 colunas.
+     Garante logo a esquerda e burger encostado a direita, sem depender
+     do auto-placement da grelha (que deixava o burger a meio). */
+  .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px}
   .bar nav{display:none}
-  .bar .burger{display:flex}
+  .bar .status{display:none}
   .bar .order-btn{display:none}
-  .bar .status span:last-child{display:none}
+  .bar .burger{display:flex;width:40px;height:36px}
   .hero{display:flex;flex-direction:column;min-height:auto}
   .hero-l{padding:28px 24px 26px;border-right:none;border-bottom:1px solid var(--rule);justify-content:flex-start}
   .hero-meta{margin-bottom:22px}
@@ -552,7 +558,17 @@ footer{padding:32px 40px;text-align:center;font-family:var(--mono);font-size:10p
    
    Acessibilidade: @media prefers-reduced-motion desliga tudo
    para utilizadores com sensibilidade a movimento. */
-@media(max-width:600px){.gloss .gloss-box{left:0;transform:none;max-width:200px;font-size:11px}}
+/* Em touch/mobile os tooltips de hover nao funcionam e, por ficarem
+   position:absolute com visibility:hidden, mantinham o layout e esticavam
+   ~46px para fora da direita, criando scroll horizontal (empurrava a navbar
+   fixa e o burger para fora do ecra). Removem-se por completo abaixo dos
+   600px: a raiz do overflow desaparece sem precisar de overflow-x:hidden,
+   que ja tinha partido o position:sticky noutras seccoes. */
+@media(hover:none),(max-width:1000px){
+  .gloss .gloss-box,
+  .tip .tip-box{display:none}
+  .gloss{cursor:default}
+}
 html.anim .reveal{opacity:0;transform:translateY(20px)}
 html.anim .reveal.revealed{opacity:1;transform:translateY(0);transition:opacity .5s ease-out,transform .5s ease-out}
 @media(prefers-reduced-motion:reduce){html.anim .reveal,html.anim .reveal.revealed{opacity:1;transform:none;transition:none}}
@@ -578,13 +594,13 @@ html.anim .reveal.revealed{opacity:1;transform:translateY(0);transition:opacity 
   </nav>
   <div class="status"><span class="pulse"></span><span>lab&nbsp;ativo</span></div>
   <button class="order-btn" onclick="document.getElementById('blend').scrollIntoView({behavior:'smooth'})">Compor →</button>
-  <button class="burger" aria-label="Abrir menu de navegação" onclick="document.querySelector('.bar').classList.toggle('open')"><span></span><span></span><span></span></button>
+  <button class="burger" aria-label="Abrir menu de navegação" aria-controls="mobMenu" aria-expanded="false" onclick="var b=document.querySelector('.bar');this.setAttribute('aria-expanded',b.classList.toggle('open'))"><span></span><span></span><span></span></button>
 </div>
-<div class="mob-menu">
-  <a href="#sobre" onclick="document.querySelector('.bar').classList.remove('open')">/sobre</a>
+<div class="mob-menu" id="mobMenu">
+  <a href="#sobre" onclick="document.querySelector('.bar').classList.remove('open');document.querySelector('.burger').setAttribute('aria-expanded','false')">/sobre</a>
   <a href="Processo.html">/processo</a>
   <a href="Biblioteca.html">/biblioteca</a>
-  <a href="#blend" onclick="document.querySelector('.bar').classList.remove('open')">/criar blend</a>
+  <a href="#blend" onclick="document.querySelector('.bar').classList.remove('open');document.querySelector('.burger').setAttribute('aria-expanded','false')">/criar blend</a>
   <a href="Experiencia.html">/experiência</a>
   <a href="Encomendar.html" class="mob-cta">Marcar visita →</a>
 </div>
